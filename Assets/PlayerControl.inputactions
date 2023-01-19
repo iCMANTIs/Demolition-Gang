@@ -1,0 +1,34 @@
+{
+    "name": "PlayerControl",
+    "maps": [
+        {
+            "name": "Temp1",
+            "id": "8161386e-bbeb-444b-b135-342033116a92",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "e18c755b-850f-41ab-9c09-ba080b26a97a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8f00bb4c-ba37-49d9-81ac-de73beaf3a47",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
