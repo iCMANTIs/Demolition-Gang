@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class Controller : MonoBehaviour
 {
+    public float speedDamp = 0.10f;
+
     public Rigidbody rigidBody1;
     public Rigidbody rigidBody2;
 
@@ -19,7 +21,7 @@ public class Controller : MonoBehaviour
         "RightJoyStickS3",
     };
 
-    enum StickState { ACCELERATE, FORWARD, IDLE, BACKWARD, DECELERATE }
+    enum StickState { ACCELERATE = 30, FORWARD = 15, IDLE = 0, BACKWARD = -15, DECELERATE = -30 }
     StickState leftStick1 = StickState.IDLE;
     StickState leftStick2 = StickState.IDLE;
     StickState leftStick3 = StickState.IDLE;
@@ -44,6 +46,9 @@ public class Controller : MonoBehaviour
         UpdateJoyStickState(ref rightStick1, stickNames[3]);
         UpdateJoyStickState(ref rightStick2, stickNames[4]);
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
+
+        UpdateMovement();
+        UpdateRotation();
     }
 
 
@@ -67,6 +72,31 @@ public class Controller : MonoBehaviour
     }
 
 
+    private void UpdateMovement()
+    {
+        Vector3 direction = Vector3.zero;
+        float speed = Mathf.Abs((int)leftStick1 + (int)rightStick1) * speedDamp;
+
+        if ((int)leftStick1 > 0 && (int)rightStick1 > 0)
+            direction = transform.right;
+        else if ((int)leftStick1 < 0 && (int)rightStick1 < 0)
+            direction = transform.right * -1;
+
+
+        transform.Translate(direction * speed * Time.deltaTime, Space.World);
+    }
+
+
+    private void UpdateRotation()
+    {
+        float angularSpeed = Mathf.Abs((int)leftStick1 - (int)rightStick1);
+        Vector3 axis = Vector3.up;
+
+        if ((int)leftStick1 - (int)rightStick1 > 0)
+            transform.Rotate(axis, angularSpeed * Time.deltaTime);
+        else if ((int)leftStick1 - (int)rightStick1 < 0)
+            transform.Rotate(axis, angularSpeed * Time.deltaTime * -1);
+    }
 
 
 
