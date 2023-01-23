@@ -8,8 +8,8 @@ public class Controller : MonoBehaviour
 {
     public float speedDamp = 0.10f;
 
-    public Rigidbody rigidBody1;
-    public Rigidbody rigidBody2;
+    public GameObject cab;
+    public GameObject boom;
 
     private string[] stickNames = 
     {
@@ -47,8 +47,10 @@ public class Controller : MonoBehaviour
         UpdateJoyStickState(ref rightStick2, stickNames[4]);
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
 
-        UpdateMovement();
-        UpdateRotation();
+        UpdateExcavatorMovement();
+        UpdateExcavatorRotation();
+        UpdateCabRotation();
+        UpdateBoomRotation();
     }
 
 
@@ -72,10 +74,10 @@ public class Controller : MonoBehaviour
     }
 
 
-    private void UpdateMovement()
+    private void UpdateExcavatorMovement()
     {
         Vector3 direction = Vector3.zero;
-        float speed = Mathf.Abs((int)leftStick1 + (int)rightStick1) * speedDamp;
+        float speed = Mathf.Abs((int)leftStick1 + (int)rightStick1) * speedDamp * Time.deltaTime;
 
         if ((int)leftStick1 > 0 && (int)rightStick1 > 0)
             direction = transform.right;
@@ -83,22 +85,43 @@ public class Controller : MonoBehaviour
             direction = transform.right * -1;
 
 
-        transform.Translate(direction * speed * Time.deltaTime, Space.World);
+        transform.Translate(direction * speed, Space.World);
     }
 
 
-    private void UpdateRotation()
+    private void UpdateExcavatorRotation()
     {
-        float angularSpeed = Mathf.Abs((int)leftStick1 - (int)rightStick1);
+        float angularSpeed = Mathf.Abs((int)leftStick1 - (int)rightStick1) * Time.deltaTime;
         Vector3 axis = Vector3.up;
 
         if ((int)leftStick1 - (int)rightStick1 > 0)
-            transform.Rotate(axis, angularSpeed * Time.deltaTime);
+            transform.Rotate(axis, angularSpeed);
         else if ((int)leftStick1 - (int)rightStick1 < 0)
-            transform.Rotate(axis, angularSpeed * Time.deltaTime * -1);
+            transform.Rotate(axis, angularSpeed * -1);
     }
 
 
+    private void UpdateCabRotation()
+    {
+        float angularSpeed = (int)leftStick2 * Time.deltaTime;
+        Vector3 axis = Vector3.up;
+        cab.transform.Rotate(axis, angularSpeed);
+    }
+
+
+    private void UpdateBoomRotation()
+    {
+        float angularSpeed = (int)leftStick3 * Time.deltaTime;
+        Vector3 axis = boom.transform.forward;
+        boom.transform.Rotate(axis, angularSpeed, Space.World);
+
+        /* Limit boom rotation within specific angle */
+        Vector3 eularAngle = boom.transform.localEulerAngles;
+        if (eularAngle.z > 350)
+            boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, 350);
+        if (eularAngle.z < 260)
+            boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, 260);
+    }
 
 
     // Show some data 
