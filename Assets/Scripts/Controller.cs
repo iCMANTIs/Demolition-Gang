@@ -51,6 +51,9 @@ public class Controller : MonoBehaviour
         UpdateExcavatorRotation();
         UpdateCabRotation();
         UpdateBoomRotation();
+
+
+        UpdateMovementTemp();
     }
 
 
@@ -104,8 +107,8 @@ public class Controller : MonoBehaviour
     private void UpdateCabRotation()
     {
         float angularSpeed = (int)leftStick2 * Time.deltaTime;
-        Vector3 axis = Vector3.up;
-        cab.transform.Rotate(axis, angularSpeed);
+        Vector3 axis = cab.transform.up; 
+        cab.transform.Rotate(axis, angularSpeed, Space.World);
     }
 
 
@@ -122,6 +125,26 @@ public class Controller : MonoBehaviour
         if (eularAngle.z < 260)
             boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, 260);
     }
+
+
+
+
+
+
+
+
+
+    private void UpdateMovementTemp()
+    {
+        float speed = 15f * Input.GetAxis("Vertical") * Time.deltaTime;
+
+        transform.Translate(transform.right * speed, Space.World);
+
+        float angularSpeed = 30f * Input.GetAxis("Horizontal") * Time.deltaTime;
+
+        transform.Rotate(transform.up, angularSpeed, Space.World);
+    }
+
 
 
     // Show some data 
