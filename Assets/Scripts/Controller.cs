@@ -14,6 +14,10 @@ public class Controller : MonoBehaviour
     public GameObject cab;
     public GameObject boom;
 
+    public AudioClip engine;
+    public AudioClip collision;
+    public AudioSource audioSource;
+
     private string[] stickNames = 
     {
         "LeftJoyStickS1",
@@ -55,6 +59,9 @@ public class Controller : MonoBehaviour
         UpdateExcavatorRotation();
         UpdateCabRotation();
         UpdateBoomRotation();
+
+
+        UpdateEngineSoundEffect();
 
 
         UpdateMovementTemp();
@@ -142,6 +149,15 @@ public class Controller : MonoBehaviour
         }
     }
 
+
+    private void UpdateEngineSoundEffect()
+    {
+        if (leftStick1 == StickState.IDLE && rightStick1 == StickState.IDLE)
+            audioSource.Stop();
+        else if (audioSource.isPlaying == false)
+            audioSource.Play();
+            
+    }
 
 
 

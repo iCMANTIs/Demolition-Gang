@@ -5,12 +5,18 @@ using UnityEngine;
 
 public class Victim : MonoBehaviour
 {
+    private bool isDead = false;
+    public bool IsDead { get { return isDead; } set { isDead = value; } }
+
+
     public Rigidbody headRb;
     public Rigidbody bodyRb;
     public Rigidbody arm1Rb;
     public Rigidbody arm2Rb;
     public Rigidbody leg1Rb;
     public Rigidbody leg2Rb;
+
+
 
 
     private void OnTriggerEnter(Collider other)
@@ -30,6 +36,7 @@ public class Victim : MonoBehaviour
         arm2Rb.useGravity = true;  
         leg1Rb.useGravity = true;
         leg2Rb.useGravity = true;
+
 
         StartCoroutine(DespawnCoroutine());
     }
