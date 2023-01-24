@@ -8,6 +8,9 @@ public class Controller : MonoBehaviour
 {
     public float speedDamp = 0.10f;
 
+    public Camera cameraTPS;
+    public Camera cameraFPS;
+
     public GameObject cab;
     public GameObject boom;
 
@@ -47,6 +50,7 @@ public class Controller : MonoBehaviour
         UpdateJoyStickState(ref rightStick2, stickNames[4]);
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
 
+        UpdateCamera();
         UpdateExcavatorMovement();
         UpdateExcavatorRotation();
         UpdateCabRotation();
@@ -127,7 +131,16 @@ public class Controller : MonoBehaviour
     }
 
 
-
+    private void UpdateCamera()
+    {
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            cameraFPS.enabled = !cameraFPS.enabled;
+            cameraFPS.GetComponent<AudioListener>().enabled = !cameraFPS.enabled;
+            cameraTPS.enabled = !cameraFPS.enabled;
+            cameraTPS.GetComponent<AudioListener>().enabled = !cameraFPS.enabled;
+        }
+    }
 
 
 
