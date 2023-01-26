@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2168238233250510561}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6, z: 0}
+  m_LocalPosition: {x: 0.2, y: 6.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 4634188973071689566}
   - component: {fileID: 5111964214436365830}
   - component: {fileID: 6818358655645639432}
+  - component: {fileID: 7770422074156204529}
   m_Layer: 0
   m_Name: CameraFPS
   m_TagString: Untagged
@@ -117,6 +118,39 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3585934765846476139}
   m_Enabled: 0
+--- !u!114 &7770422074156204529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3585934765846476139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &3773905123383679922
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,7 +282,7 @@ GameObject:
   - component: {fileID: 1223099054225712970}
   - component: {fileID: 1065399332278116940}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Cab
   m_TagString: Excavator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -530,6 +564,7 @@ GameObject:
   - component: {fileID: 3450109458284217995}
   - component: {fileID: 2338403183381398701}
   - component: {fileID: 7661122568756891389}
+  - component: {fileID: 5341828702831589749}
   m_Layer: 0
   m_Name: Boom
   m_TagString: Excavator
@@ -615,6 +650,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &5341828702831589749
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6079085229290992585}
+  serializedVersion: 2
+  m_Mass: 500
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &6576834159957801218
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,7 +722,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7053768636353989366}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.99, y: 0.75, z: 0}
+  m_LocalPosition: {x: 2, y: 0.85, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -692,6 +743,7 @@ GameObject:
   - component: {fileID: 2684666940642476474}
   - component: {fileID: 1204100060832611402}
   - component: {fileID: 309808210702012111}
+  - component: {fileID: 6157768110421357885}
   - component: {fileID: 5809619786413717597}
   m_Layer: 0
   m_Name: Body
@@ -778,6 +830,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &6157768110421357885
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7693260127906922689}
+  serializedVersion: 2
+  m_Mass: 1000
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!82 &5809619786413717597
 AudioSource:
   m_ObjectHideFlags: 0
@@ -981,7 +1049,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7762286543978918496}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 500
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
@@ -1014,6 +1082,7 @@ GameObject:
   - component: {fileID: 8110901709416890332}
   - component: {fileID: 9208817166473896405}
   - component: {fileID: 2594535646499677999}
+  - component: {fileID: 1375043080923873604}
   m_Layer: 0
   m_Name: Arm
   m_TagString: Excavator
@@ -1099,3 +1168,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1375043080923873604
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8665907512590842671}
+  serializedVersion: 2
+  m_Mass: 500
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
