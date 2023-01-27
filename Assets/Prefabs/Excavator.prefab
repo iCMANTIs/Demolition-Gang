@@ -449,10 +449,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedDamp: 0.1
+  boomUpperBound: 350
+  boomLowerBound: 260
+  armUpperBound: 40
+  armLowerBound: 310
+  bucketAngularSpeed: 400
+  bucketUpperBound: 80
+  buckerLowerBound: 320
+  igniteInterval: 10
+  igniteThreshold: 10
   cameraTPS: {fileID: 8595729866472795541}
   cameraFPS: {fileID: 5111964214436365830}
   cab: {fileID: 5793662233800236192}
   boom: {fileID: 7053768636353989366}
+  arm: {fileID: 2168238233250510561}
+  bucket: {fileID: 6576834159957801218}
   engine: {fileID: 8300000, guid: 908ba832a493bed4a8e1bd49715693a3, type: 3}
   collision: {fileID: 8300000, guid: 52a64542f861e464798b18cba3a3032e, type: 3}
   audioSource: {fileID: 7048426819221095615}

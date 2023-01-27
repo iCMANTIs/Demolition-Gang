@@ -7,16 +7,28 @@ using UnityEngine.InputSystem;
 public class Controller : MonoBehaviour
 {
     public float speedDamp = 0.10f;
-
+    public float boomUpperBound = 0.0f;
+    public float boomLowerBound = 0.0f;
+    public float armUpperBound = 0.0f;
+    public float armLowerBound = 0.0f;
+    public float bucketAngularSpeed = 0.0f;
+    public float bucketUpperBound = 0.0f;
+    public float buckerLowerBound = 0.0f;
+    public float igniteInterval = 0.0f;
+    public int igniteThreshold = 0;
+    
     public Camera cameraTPS;
     public Camera cameraFPS;
-
     public GameObject cab;
     public GameObject boom;
-
+    public GameObject arm;
+    public GameObject bucket;
     public AudioClip engine;
     public AudioClip collision;
     public AudioSource audioSource;
+
+
+    private bool isBucketRotating = false;
 
     private string[] stickNames = 
     {
@@ -36,6 +48,11 @@ public class Controller : MonoBehaviour
     StickState rightStick2 = StickState.IDLE;
     StickState rightStick3 = StickState.IDLE;
 
+    enum EngineState { ON = 1, IGNITE = 0, OFF = -1}
+    EngineState engineState = EngineState.OFF;
+
+    enum GearState { SECOND = 2, FIRST = 1, NEUTRAL = 0, REVERSE = -1}
+    GearState gearState = GearState.NEUTRAL;
 
 
 
@@ -53,18 +70,23 @@ public class Controller : MonoBehaviour
         UpdateJoyStickState(ref rightStick1, stickNames[3]);
         UpdateJoyStickState(ref rightStick2, stickNames[4]);
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
+        UpdateGearState();
 
         UpdateCamera();
         UpdateExcavatorMovement();
         UpdateExcavatorRotation();
         UpdateCabRotation();
         UpdateBoomRotation();
+        UpdateArmRotation();
+
+        IgniteListener();
+        BucketListener();
 
 
         UpdateEngineSoundEffect();
 
 
-        UpdateMovementTemp();
+        //UpdateMovementTemp();
     }
 
 
@@ -90,51 +112,107 @@ public class Controller : MonoBehaviour
 
     private void UpdateExcavatorMovement()
     {
-        Vector3 direction = Vector3.zero;
-        float speed = Mathf.Abs((int)leftStick1 + (int)rightStick1) * speedDamp * Time.deltaTime;
-
-        if ((int)leftStick1 > 0 && (int)rightStick1 > 0)
-            direction = transform.right;
-        else if ((int)leftStick1 < 0 && (int)rightStick1 < 0)
-            direction = transform.right * -1;
-
-
-        transform.Translate(direction * speed, Space.World);
+        if (engineState == EngineState.ON)
+        {
+            Vector3 direction = transform.right;
+            float speed = (int)leftStick1 * (int)gearState * speedDamp * Time.deltaTime;
+            transform.Translate(direction * speed, Space.World);
+        }
     }
 
 
     private void UpdateExcavatorRotation()
     {
-        float angularSpeed = Mathf.Abs((int)leftStick1 - (int)rightStick1) * Time.deltaTime;
-        Vector3 axis = Vector3.up;
-
-        if ((int)leftStick1 - (int)rightStick1 > 0)
-            transform.Rotate(axis, angularSpeed);
-        else if ((int)leftStick1 - (int)rightStick1 < 0)
-            transform.Rotate(axis, angularSpeed * -1);
+        if (engineState == EngineState.ON)
+        {
+            Vector3 axis = transform.up;
+            float angularSpeed = -1 * (int)rightStick1 * Time.deltaTime;
+            transform.Rotate(axis, angularSpeed, Space.World);
+        }
     }
 
 
     private void UpdateCabRotation()
     {
-        float angularSpeed = (int)leftStick2 * Time.deltaTime;
-        Vector3 axis = cab.transform.up; 
-        cab.transform.Rotate(axis, angularSpeed, Space.World);
+        if (engineState == EngineState.ON)
+        {
+            float angularSpeed = (int)leftStick2 * Time.deltaTime;
+            Vector3 axis = cab.transform.up; 
+            cab.transform.Rotate(axis, angularSpeed, Space.World);
+        }
     }
 
 
     private void UpdateBoomRotation()
     {
-        float angularSpeed = (int)leftStick3 * Time.deltaTime;
-        Vector3 axis = boom.transform.forward;
-        boom.transform.Rotate(axis, angularSpeed, Space.World);
+        if (engineState == EngineState.ON)
+        {
+            float angularSpeed = (int)leftStick3 * Time.deltaTime;
+            Vector3 axis = boom.transform.forward;
+            boom.transform.Rotate(axis, angularSpeed, Space.World);
+        }
 
         /* Limit boom rotation within specific angle */
         Vector3 eularAngle = boom.transform.localEulerAngles;
-        if (eularAngle.z > 350)
-            boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, 350);
-        if (eularAngle.z < 260)
-            boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, 260);
+        if (eularAngle.z > boomUpperBound)
+            boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, boomUpperBound);
+        if (eularAngle.z < boomLowerBound)
+            boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, boomLowerBound);
+    }
+
+
+    private void UpdateArmRotation()
+    {
+        if (engineState == EngineState.ON)
+        {
+            float angularSpeed = (int)rightStick2 * Time.deltaTime;
+            Vector3 axis = arm.transform.forward;
+            arm.transform.Rotate(axis, angularSpeed, Space.World);
+        }
+
+        //Debug.Log($"arm LocalEulaerAngle: {arm.transform.localEulerAngles}, EulerAngle: {arm.transform.eulerAngles}");
+
+        /* Limit arm rotation within specific angle */
+        Vector3 eulerAngle = arm.transform.localEulerAngles;
+        if (eulerAngle.z > armUpperBound && eulerAngle.z < 180)
+            arm.transform.localRotation = Quaternion.Euler(eulerAngle.x, eulerAngle.y, armUpperBound);
+        if (eulerAngle.z < armLowerBound && eulerAngle.z > 180)
+            arm.transform.localRotation = Quaternion.Euler(eulerAngle.x, eulerAngle.y, armLowerBound);
+    }
+
+
+    private void UpdateGearState()
+    {
+        GearState currentState;
+        switch (rightStick3)
+        {
+            case StickState.ACCELERATE:
+                currentState = GearState.SECOND;
+                break;
+            case StickState.FORWARD:
+                currentState = GearState.FIRST;
+                break;
+            case StickState.IDLE:
+                currentState = GearState.NEUTRAL;
+                break;
+            case StickState.BACKWARD:
+            case StickState.DECELERATE:
+                currentState = GearState.REVERSE;
+                break;
+            default:
+                currentState = GearState.NEUTRAL;
+                break;
+        }
+
+        if (currentState != gearState && !Input.GetKey(KeyCode.Joystick1Button2))
+        {
+            engineState = EngineState.OFF;
+            gearState = GearState.NEUTRAL;
+        }
+        else
+        {
+            gearState = currentState;
+        }
     }
 
 
@@ -160,6 +238,88 @@ public class Controller : MonoBehaviour
     }
 
 
+    private void IgniteListener()
+    {
+        if ((Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Z)) 
+            && engineState == EngineState.OFF)
+        {
+            StartCoroutine(IgniteCoroutine());
+        }
+    }
+
+
+    private void BucketListener()
+    {
+        Debug.Log($"{bucket.transform.localEulerAngles}");
+
+        if ((Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.X)) 
+            && isBucketRotating == false)
+        {
+            StartCoroutine(BucketCoroutine());
+        }
+    }
+
+
+    private IEnumerator IgniteCoroutine()
+    {
+        float count = 0f;
+        float time = 0f;
+        engineState = EngineState.IGNITE;
+
+        while (time <= 10f)
+        {
+            if (count == igniteThreshold)
+            {
+                engineState = EngineState.ON;
+                Debug.Log("Engine ON");
+                yield break;
+            }
+
+            if (Input.GetKeyUp(KeyCode.Joystick1Button0))
+                count++;
+            else if (Input.GetKeyUp(KeyCode.Joystick2Button0))
+                count++;
+            else if (Input.GetKeyUp(KeyCode.Z))
+                count++;
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        engineState = EngineState.OFF;
+        yield break;
+    }
+
+
+    private IEnumerator BucketCoroutine()
+    {
+        isBucketRotating = true;
+        Vector3 eulerAngle = bucket.transform.localEulerAngles;
+        Vector3 axis = bucket.transform.forward;
+
+        /* Rotate forward */
+        while ((eulerAngle.z <= 360 && eulerAngle.z > 180) ||
+               (eulerAngle.z <= bucketUpperBound && eulerAngle.z < 180))
+        {
+            eulerAngle = bucket.transform.localEulerAngles;
+            bucket.transform.Rotate(axis, bucketAngularSpeed * Time.deltaTime, Space.World);
+            yield return null;
+        }
+
+        /* Rotate backward */
+        while ((eulerAngle.z >= 0 && eulerAngle.z < 180) ||
+               (eulerAngle.z >= buckerLowerBound && eulerAngle.z > 180))
+        {
+            eulerAngle = bucket.transform.localEulerAngles;
+            bucket.transform.Rotate(axis, -1 * bucketAngularSpeed * Time.deltaTime, Space.World);
+            yield return null;
+        }
+
+        isBucketRotating = false;
+        yield break;
+    }
+
+
 
 
 
@@ -179,14 +339,11 @@ public class Controller : MonoBehaviour
     // Show some data 
     void OnGUI()
     {
-        GUI.TextArea(new Rect(0, 40, 250, 40), "Current Horizontal Axis : " + Input.GetAxis("Horizontal"));
-        GUI.TextArea(new Rect(0, 80, 250, 40), "Current Vertical Axis : " + Input.GetAxis("Vertical"));
-        GUI.TextArea(new Rect(0, 120, 250, 40), "Current Fire1 Axis : " + Input.GetAxis("LeftJoyStickS1"));
-        GUI.TextArea(new Rect(0, 160, 250, 40), "Current Fire2 Axis : " + Input.GetAxis("LeftJoyStickS2"));
-        GUI.TextArea(new Rect(0, 200, 250, 40), "Current Fire3 Axis : " + Input.GetAxis("LeftJoyStickS3"));
-        GUI.TextArea(new Rect(0, 240, 250, 40), "Left stick : " + leftStick1.ToString() + " : " + leftStick2.ToString());
-        GUI.TextArea(new Rect(0, 280, 250, 40), "Right stick : " + rightStick1.ToString() + " : " + rightStick2.ToString());
-        GUI.TextArea(new Rect(0, 320, 250, 40), "Current Joy Button 0 : " + Input.GetAxis("LeftJoyStickB0"));
+        GUI.TextArea(new Rect(0, 40, 250, 40), $"Left stick : {leftStick1} : {leftStick2} : {leftStick3}");
+        GUI.TextArea(new Rect(0, 80, 250, 40), $"Right stick : {rightStick1} : {rightStick2} : {rightStick3}");
+        GUI.TextArea(new Rect(0, 120, 250, 40), $"Engine State : {engineState}");
+        GUI.TextArea(new Rect(0, 160, 250, 40), $"Gear State : {gearState}");
+        //GUI.TextArea(new Rect(0, 200, 250, 40), $"JoyStick Button : {Input.GetKeyUp(KeyCode.Joystick1Button2)}");
     }
 
 
