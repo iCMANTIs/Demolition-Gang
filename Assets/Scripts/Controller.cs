@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Controller : MonoBehaviour
+public class Controller : DestroySingleton<Controller>
 {
     public float speedDamp = 0.10f;
     public float boomUpperBound = 0.0f;
@@ -56,13 +56,14 @@ public class Controller : MonoBehaviour
 
 
 
-    private void Awake()
+    protected override void Awake()
     {
+
     }
 
 
     // Update is called once per frame 
-    void Update()
+    protected override void Update()
     {
         UpdateJoyStickState(ref leftStick1, stickNames[0]);
         UpdateJoyStickState(ref leftStick2, stickNames[1]);
