@@ -1,186 +1,11 @@
 fileFormatVersion: 2
 guid: 1e3f403d5b60259458bbbd22bf2b0cc9
 ModelImporter:
-  serializedVersion: 19300
+  serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Biker_Jeans_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 9e166b3beaca80448ad1a70a6ea876e9, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Biker_Jeans_Pbr_Normal
-    second: {fileID: 2800000, guid: 6a5111680e4fe4f43b11577636d7d38c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Boots_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 90197528011d536489e4ebdd67922f01, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Boots_Pbr_Normal
-    second: {fileID: 2800000, guid: c9f6d9845edbe5c4b85a15cc31885cd8, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Hair_Transparency_Pbr_Diffuse
-    second: {fileID: 2800000, guid: ea440a70c68908e419679e101e7dce6d, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Male_Brow_Base_Transparency_Pbr_Diffuse
-    second: {fileID: 2800000, guid: cf7e579ad0e6a7b438e3d2fd5e5e503a, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Male_Brow_Transparency_Pbr_Diffuse
-    second: {fileID: 2800000, guid: ce7df0eab773e324fa10fddb4fd977b1, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Punk_Leather_jacket_Pbr_Diffuse
-    second: {fileID: 2800000, guid: e1aeb15c42f4408479e5180535e9eda2, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Punk_Leather_jacket_Pbr_Normal
-    second: {fileID: 2800000, guid: ffe8669c9b84b3d438da2044dc29ed89, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Cornea_L_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 08622fb5d8fab9f4c9c04f2d9cc28ca6, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Cornea_R_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 772f672a569550e4f8d3dde73034ac4b, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Eye_L_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 1958223e7aa6c2848a7774701f16619c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Eye_L_Pbr_Normal
-    second: {fileID: 2800000, guid: 1375adb37c634154db8b96af6506148c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Eye_R_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 107e3811863fcbd41aa532ed2b8f363b, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Eye_R_Pbr_Normal
-    second: {fileID: 2800000, guid: 33bff895973cd8942a23560285600a18, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Eyelash_Pbr_Diffuse
-    second: {fileID: 2800000, guid: a98fb7b7076bf2b4c8a585d1c6e0ed69, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Eyelash_Pbr_Normal
-    second: {fileID: 2800000, guid: 82011f3417ae5534db9cd4d3be057179, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Lower_Teeth_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 91d4a5801f96b3343885d7c53c363a58, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Lower_Teeth_Pbr_Normal
-    second: {fileID: 2800000, guid: 2f08fb7e8a55aca428af1a31dae3d1cc, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Nails_Pbr_Diffuse
-    second: {fileID: 2800000, guid: c16888b59b6c68c49a11a82a2952e23f, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Nails_Pbr_Normal
-    second: {fileID: 2800000, guid: 614755582ac64214a9b6cef2d5b70fb6, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Skin_Arm_Pbr_Diffuse
-    second: {fileID: 2800000, guid: d061e08b433415c4ca190b8c0c10fa1b, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Skin_Arm_Pbr_Normal
-    second: {fileID: 2800000, guid: c3caf26b8b2853b46b162a61a025b939, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Skin_Body_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 7295fec7dcbf75d45b0580b1bb11d47a, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Skin_Body_Pbr_Normal
-    second: {fileID: 2800000, guid: 417b3bad3d72a6d4593cac71ce257dc7, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Skin_Head_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 8fd69be5a739efc43800179adef20426, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Skin_Head_Pbr_Normal
-    second: {fileID: 2800000, guid: abaf83201c99d6040b1aabdcbcad6faf, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Skin_Leg_Pbr_Diffuse
-    second: {fileID: 2800000, guid: d4cf1e1e82a0b2e41bdcd07475e5a0ff, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Skin_Leg_Pbr_Normal
-    second: {fileID: 2800000, guid: b1f82730ea694834a9c728a7c2dc3a1e, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Tearline_L_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 0071357f23278894c86091d5aec28370, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Tearline_R_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 7a57b7ce6dc052644988407721ca5b50, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Upper_Teeth_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 34271f4935bdfee448e4a9214fca911d, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Std_Upper_Teeth_Pbr_Normal
-    second: {fileID: 2800000, guid: ecd14aeb1ea365a419343c82df1569ad, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Tank_top_Pbr_Diffuse
-    second: {fileID: 2800000, guid: d6715065172eaa740b3f01c9b7627c3c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Tank_top_Pbr_Normal
-    second: {fileID: 2800000, guid: 6776436042c98d24ca4692de9360774c, type: 3}
+  externalObjects: {}
   materials:
-    materialImportMode: 1
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -189,6 +14,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -218,22 +44,29 @@ ModelImporter:
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
+    optimizeBones: 1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -265,6 +98,8 @@ ModelImporter:
   animationType: 2
   humanoidOversampling: 1
   avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
