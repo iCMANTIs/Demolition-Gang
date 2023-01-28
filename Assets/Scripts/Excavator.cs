@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Controller : DestroySingleton<Controller>
+public class Excavator : DestroyableSingleton<Excavator>
 {
     public float speedDamp = 0.10f;
     public float boomUpperBound = 0.0f;
@@ -23,9 +22,6 @@ public class Controller : DestroySingleton<Controller>
     public GameObject boom;
     public GameObject arm;
     public GameObject bucket;
-    public AudioClip engine;
-    public AudioClip collision;
-    public AudioSource audioSource;
 
 
     private bool isBucketRotating = false;
@@ -58,7 +54,6 @@ public class Controller : DestroySingleton<Controller>
 
     protected override void Awake()
     {
-
     }
 
 
@@ -83,8 +78,6 @@ public class Controller : DestroySingleton<Controller>
         IgniteListener();
         BucketListener();
 
-
-        UpdateEngineSoundEffect();
 
 
         //UpdateMovementTemp();
@@ -229,16 +222,6 @@ public class Controller : DestroySingleton<Controller>
     }
 
 
-    private void UpdateEngineSoundEffect()
-    {
-        if (leftStick1 == StickState.IDLE && rightStick1 == StickState.IDLE)
-            audioSource.Stop();
-        else if (audioSource.isPlaying == false)
-            audioSource.Play();
-            
-    }
-
-
     private void IgniteListener()
     {
         if ((Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Z)) 
@@ -251,7 +234,7 @@ public class Controller : DestroySingleton<Controller>
 
     private void BucketListener()
     {
-        Debug.Log($"{bucket.transform.localEulerAngles}");
+        //Debug.Log($"{bucket.transform.localEulerAngles}");
 
         if ((Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.X)) 
             && isBucketRotating == false)
@@ -344,7 +327,7 @@ public class Controller : DestroySingleton<Controller>
         GUI.TextArea(new Rect(0, 80, 250, 40), $"Right stick : {rightStick1} : {rightStick2} : {rightStick3}");
         GUI.TextArea(new Rect(0, 120, 250, 40), $"Engine State : {engineState}");
         GUI.TextArea(new Rect(0, 160, 250, 40), $"Gear State : {gearState}");
-        //GUI.TextArea(new Rect(0, 200, 250, 40), $"JoyStick Button : {Input.GetKeyUp(KeyCode.Joystick1Button2)}");
+        GUI.TextArea(new Rect(0, 200, 250, 40), $"JoyStick Button : {Input.GetKey(KeyCode.Joystick1Button2)}");
     }
 
 

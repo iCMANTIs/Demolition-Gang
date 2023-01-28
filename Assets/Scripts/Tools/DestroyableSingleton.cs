@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class  DestroySingleton<T> : MonoBehaviour where T : MonoBehaviour
+public class  DestroyableSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private T instance;
     public T Instance => instance;
