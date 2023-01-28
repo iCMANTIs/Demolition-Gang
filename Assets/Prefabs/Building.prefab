@@ -45,6 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15a2609c5ecfa04187f026d5bec5133, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DistanceThreshold: 100
+  RPMThreashold: 5000
+  alertDecay: 1200
+  alertUpperBound: 10000
+  alertLowerBound: 0
+  hornAlert: 5000
 --- !u!1001 &1320235155377686478
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60,17 +66,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: e337ed2962e17e44797125a212e52c71,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e337ed2962e17e44797125a212e52c71,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e337ed2962e17e44797125a212e52c71,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e337ed2962e17e44797125a212e52c71,
         type: 3}

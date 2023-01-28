@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class DontDestroySingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private T instance;
-    public T Instance => instance;
+    private static T instance;
+    public static T Instance => instance;
 
 
     protected virtual void Awake()

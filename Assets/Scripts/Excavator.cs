@@ -7,6 +7,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 {
     [Header("Speed")]
     public float speedDamp = 0.10f;
+
     [Header("Mechanical Arm")]
     public float boomUpperBound = 0.0f;
     public float boomLowerBound = 0.0f;
@@ -15,6 +16,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     public float bucketAngularSpeed = 0.0f;
     public float bucketUpperBound = 0.0f;
     public float buckerLowerBound = 0.0f;
+
     [Header("Engine")]
     public float igniteInterval = 0.0f;
     public int igniteThreshold = 0;
@@ -22,6 +24,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     public int RPMDecay = 0;
     public int RPMUpperBound = 0;
     public int RPMLowerBound = 0;
+
 
     [Header("GameObject")]
     public Camera cameraTPS;
@@ -35,6 +38,8 @@ public class Excavator : DestroyableSingleton<Excavator>
     private bool isBucketRotating = false;
     private int engineRPM = 0;
     public int EngineRPM => engineRPM;
+    public Action hornAction;
+
 
     private string[] stickNames = 
     {
@@ -64,12 +69,15 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     protected override void Awake()
     {
+        base.Awake();
     }
 
 
     // Update is called once per frame 
     protected override void Update()
     {
+        base.Update();
+
         UpdateJoyStickState(ref leftStick1, stickNames[0]);
         UpdateJoyStickState(ref leftStick2, stickNames[1]);
         UpdateJoyStickState(ref leftStick3, stickNames[2]);
@@ -89,7 +97,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
         IgniteListener();
         BucketListener();
-
+        HornListener();
 
 
         //UpdateMovementTemp();
@@ -289,6 +297,21 @@ public class Excavator : DestroyableSingleton<Excavator>
     }
 
 
+    private void HornListener()
+    {
+        if (Input.GetKeyUp(KeyCode.Joystick1Button1) || Input.GetKeyUp(KeyCode.Joystick1Button3) ||
+            Input.GetKeyUp(KeyCode.Joystick1Button5) || Input.GetKeyUp(KeyCode.Joystick2Button1) ||
+            Input.GetKeyUp(KeyCode.Joystick2Button3) || Input.GetKeyUp(KeyCode.Joystick2Button5) ||
+            Input.GetKeyUp(KeyCode.V))
+        {
+            SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
+            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn");
+
+            hornAction.Invoke();
+        }
+    }
+
+
     private IEnumerator IgniteCoroutine()
     {
         float count = 0f;
@@ -352,6 +375,9 @@ public class Excavator : DestroyableSingleton<Excavator>
 
 
 
+
+
+
     private void UpdateMovementTemp()
     {
         float speed = 15f * Input.GetAxis("Vertical") * Time.deltaTime;
@@ -364,6 +390,8 @@ public class Excavator : DestroyableSingleton<Excavator>
     }
 
 
+   
+
 
     // Show some data 
     void OnGUI()
@@ -373,7 +401,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         GUI.TextArea(new Rect(0, 120, 250, 40), $"Engine State : {engineState}");
         GUI.TextArea(new Rect(0, 160, 250, 40), $"Gear State : {gearState}");
         GUI.TextArea(new Rect(0, 200, 250, 40), $"Engine RPM : {engineRPM}");
-        GUI.TextArea(new Rect(0, 240, 250, 40), $"JoyStick Button : {Input.GetKey(KeyCode.Joystick1Button2)}");
+        //GUI.TextArea(new Rect(0, 240, 250, 40), $"JoyStick Button : {Input.GetKey(KeyCode.Joystick1Button2)}");
     }
 
 

@@ -38,8 +38,8 @@ namespace SoundEffect
 
         public void PlayOneShot(AudioSource audioSource, string soundID)
         {
-            AudioClip audio = SoundEffectAssets.instance.FindSoundEffect(soundID);
-            audioSource.PlayOneShot(audio);
+            audioSource.clip = SoundEffectAssets.instance.FindSoundEffect(soundID);
+            audioSource.Play();
         }
 
 
