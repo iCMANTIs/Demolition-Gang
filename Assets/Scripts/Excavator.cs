@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class Excavator : DestroyableSingleton<Excavator>
 {
+    [Header("Speed")]
     public float speedDamp = 0.10f;
+    [Header("Mechanical Arm")]
     public float boomUpperBound = 0.0f;
     public float boomLowerBound = 0.0f;
     public float armUpperBound = 0.0f;
@@ -13,9 +15,15 @@ public class Excavator : DestroyableSingleton<Excavator>
     public float bucketAngularSpeed = 0.0f;
     public float bucketUpperBound = 0.0f;
     public float buckerLowerBound = 0.0f;
+    [Header("Engine")]
     public float igniteInterval = 0.0f;
     public int igniteThreshold = 0;
-    
+    public int RPMSpeed = 0;
+    public int RPMDecay = 0;
+    public int RPMUpperBound = 0;
+    public int RPMLowerBound = 0;
+
+    [Header("GameObject")]
     public Camera cameraTPS;
     public Camera cameraFPS;
     public GameObject cab;
@@ -25,6 +33,8 @@ public class Excavator : DestroyableSingleton<Excavator>
 
 
     private bool isBucketRotating = false;
+    private int engineRPM = 0;
+    public int EngineRPM => engineRPM;
 
     private string[] stickNames = 
     {
@@ -47,7 +57,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     enum EngineState { ON = 1, IGNITE = 0, OFF = -1}
     EngineState engineState = EngineState.OFF;
 
-    enum GearState { SECOND = 2, FIRST = 1, NEUTRAL = 0, REVERSE = -1}
+    enum GearState { THIRD = 3, SECOND = 2, FIRST = 1, NEUTRAL = 0, REVERSE = -1}
     GearState gearState = GearState.NEUTRAL;
 
 
@@ -67,6 +77,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         UpdateJoyStickState(ref rightStick2, stickNames[4]);
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
         UpdateGearState();
+        UpdateEngineRMP();
 
         UpdateCamera();
         UpdateExcavatorMovement();
@@ -74,6 +85,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         UpdateCabRotation();
         UpdateBoomRotation();
         UpdateArmRotation();
+
 
         IgniteListener();
         BucketListener();
@@ -108,8 +120,27 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         if (engineState == EngineState.ON)
         {
+            float speed;
+            switch (leftStick1)
+            {
+                case StickState.DECELERATE:
+                    speed = 0.0f;
+                    break;
+                case StickState.BACKWARD:
+                case StickState.IDLE:
+                    speed = 15.0f;
+                    break;
+                case StickState.FORWARD:
+                case StickState.ACCELERATE:
+                    speed = 30.0f;
+                    break;
+                default:
+                    speed = 0.0f;
+                    break;
+            }
+
             Vector3 direction = transform.right;
-            float speed = (int)leftStick1 * (int)gearState * speedDamp * Time.deltaTime;
+            speed = speed * (int)gearState * speedDamp * Time.deltaTime;
             transform.Translate(direction * speed, Space.World);
         }
     }
@@ -207,6 +238,20 @@ public class Excavator : DestroyableSingleton<Excavator>
         {
             gearState = currentState;
         }
+    }
+
+
+    public void UpdateEngineRMP()
+    {
+        engineRPM -= Mathf.FloorToInt(RPMDecay * Time.deltaTime);
+
+        if (engineState == EngineState.ON)
+        {
+            float stickValue = Input.GetAxis(stickNames[0]) + 1.0f;
+            engineRPM += Mathf.FloorToInt(stickValue * RPMSpeed * Time.deltaTime);
+        }
+
+        engineRPM = Math.Clamp(engineRPM, RPMLowerBound, RPMUpperBound);
     }
 
 
@@ -327,7 +372,8 @@ public class Excavator : DestroyableSingleton<Excavator>
         GUI.TextArea(new Rect(0, 80, 250, 40), $"Right stick : {rightStick1} : {rightStick2} : {rightStick3}");
         GUI.TextArea(new Rect(0, 120, 250, 40), $"Engine State : {engineState}");
         GUI.TextArea(new Rect(0, 160, 250, 40), $"Gear State : {gearState}");
-        GUI.TextArea(new Rect(0, 200, 250, 40), $"JoyStick Button : {Input.GetKey(KeyCode.Joystick1Button2)}");
+        GUI.TextArea(new Rect(0, 200, 250, 40), $"Engine RPM : {engineRPM}");
+        GUI.TextArea(new Rect(0, 240, 250, 40), $"JoyStick Button : {Input.GetKey(KeyCode.Joystick1Button2)}");
     }
 
 

@@ -457,15 +457,16 @@ MonoBehaviour:
   buckerLowerBound: 320
   igniteInterval: 10
   igniteThreshold: 10
+  RPMSpeed: 1600
+  RPMDecay: 1200
+  RPMUpperBound: 7000
+  RPMLowerBound: 0
   cameraTPS: {fileID: 8595729866472795541}
   cameraFPS: {fileID: 5111964214436365830}
   cab: {fileID: 5793662233800236192}
   boom: {fileID: 7053768636353989366}
   arm: {fileID: 2168238233250510561}
   bucket: {fileID: 6576834159957801218}
-  engine: {fileID: 8300000, guid: 908ba832a493bed4a8e1bd49715693a3, type: 3}
-  collision: {fileID: 8300000, guid: 52a64542f861e464798b18cba3a3032e, type: 3}
-  audioSource: {fileID: 0}
 --- !u!1 &6079085229290992585
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,7 +887,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85293c17270b1c54f8241bd24d90abe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
 --- !u!1 &8665907512590842671
 GameObject:
   m_ObjectHideFlags: 0
