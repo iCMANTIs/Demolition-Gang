@@ -78,26 +78,32 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         base.Update();
 
+
+
         UpdateJoyStickState(ref leftStick1, stickNames[0]);
         UpdateJoyStickState(ref leftStick2, stickNames[1]);
         UpdateJoyStickState(ref leftStick3, stickNames[2]);
         UpdateJoyStickState(ref rightStick1, stickNames[3]);
         UpdateJoyStickState(ref rightStick2, stickNames[4]);
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
-        UpdateGearState();
-        UpdateEngineRMP();
+        
+        
+        if (GameplayController.Instance.gameState != GameplayController.GameState.PAUSED)
+        {
+            UpdateGearState();
+            UpdateEngineRMP();
 
-        UpdateCamera();
-        UpdateExcavatorMovement();
-        UpdateExcavatorRotation();
-        UpdateCabRotation();
-        UpdateBoomRotation();
-        UpdateArmRotation();
+            UpdateCamera();
+            UpdateExcavatorMovement();
+            UpdateExcavatorRotation();
+            UpdateCabRotation();
+            UpdateBoomRotation();
+            UpdateArmRotation();
 
-
-        IgniteListener();
-        BucketListener();
-        HornListener();
+            IgniteListener();
+            BucketListener();
+            HornListener();
+        }
 
 
         //UpdateMovementTemp();
