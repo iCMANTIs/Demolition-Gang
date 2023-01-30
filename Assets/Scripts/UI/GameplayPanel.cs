@@ -10,6 +10,20 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI alertText;
+    public TextMeshProUGUI alertStateText;
+
+    public RectTransform alertIndicator;
+
+
+    protected override void Start()
+    {
+        base.Start();
+
+        InitAlertIndicator();
+        UpdateAlertState();
+
+        AlertManager.Instance.alertAction += UpdateAlertState;
+    }
 
 
     protected override void Update()
@@ -19,6 +33,7 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
         UpdateGameTimer();
         UpdateGameSocre();
         UpdateVictimAlert();
+        UpdateAlertIndicator();
     }
 
 
@@ -60,4 +75,41 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
         alertText.text = $"{AlertManager.Instance.Alert}";
     }
 
+    public void UpdateAlertState()
+    {
+        alertStateText.text = $"State: {AlertManager.Instance.alertState}";
+    }
+
+    public void InitAlertIndicator()
+    {
+        float alertScale = AlertManager.Instance.alertUpperBound;
+        float alertThreshold = AlertManager.Instance.alertThreshold;
+        RectTransform target = alertIndicator.GetChild(1).GetComponent<RectTransform>();
+
+        /* Update target area starting position */
+        float targetStartPos = alertThreshold / alertScale * alertIndicator.sizeDelta.x;
+        Vector3 anchorPos = target.anchoredPosition;
+        anchorPos.x = targetStartPos;
+        target.anchoredPosition = anchorPos;
+
+        //Debug.Log($"localPos: {target.localPosition}, anchorPos: {target.anchoredPosition}, Pos: {target.position}");
+
+        /* Update target area size */
+        float targetSizeDelta = (alertScale - alertThreshold) / alertScale * alertIndicator.sizeDelta.x;
+        Vector2 sizeDelta = target.sizeDelta;
+        sizeDelta.x = targetSizeDelta;
+        target.sizeDelta = sizeDelta;
+    }
+
+
+    public void UpdateAlertIndicator()
+    {
+        float alertScale = AlertManager.Instance.alertUpperBound;
+        float alertValue = AlertManager.Instance.Alert;
+        Slider slider = alertIndicator.GetChild(0).GetComponent<Slider>();
+
+        /* Update slider position */
+        float ratio = alertValue / alertScale;
+        slider.value = ratio;
+    }
 }

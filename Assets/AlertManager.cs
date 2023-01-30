@@ -11,6 +11,8 @@ public class AlertManager : DestroyableSingleton<AlertManager>
         public Transform building;
         public int alert;
     }
+    public enum AlertState { ALERT, STEALTH }
+
 
     [Header("Alert Setting")]
     public int distanceThreshold = 0;
@@ -27,6 +29,9 @@ public class AlertManager : DestroyableSingleton<AlertManager>
 
 
     public List<AlertConfig> alertConfigs = new List<AlertConfig>();
+    public AlertState alertState = AlertState.STEALTH;
+    public Action alertAction;
+
 
     private int alert = 0;
     public int Alert { get { return alert; } }
@@ -92,7 +97,17 @@ public class AlertManager : DestroyableSingleton<AlertManager>
 
         alert = maxAlert;
         if (alert > alertThreshold)
-            GameplayManager.Instance.UpdateAlertState();
+            UpdateAlertState();
+    }
+
+
+    public void UpdateAlertState()
+    {
+        if (alertState != AlertState.ALERT)
+        {
+            alertState = AlertState.ALERT;
+            alertAction.Invoke();
+        }
     }
 
     private void OnNoiseOccur(string noiseType)

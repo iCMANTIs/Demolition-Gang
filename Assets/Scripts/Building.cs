@@ -14,7 +14,7 @@ public class Building : MonoBehaviour
 
     private void Start()
     {
-        GameplayManager.Instance.victimSpawnAction += SpawnVictims;
+        AlertManager.Instance.alertAction += SpawnVictims;
     }
 
 

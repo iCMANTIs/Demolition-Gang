@@ -24,12 +24,6 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
 
     public enum GameState { UNSTARTED, PAUSED, STARTED }
     public GameState gameState = GameState.UNSTARTED;
-    public enum AlertState { ALERT, STEALTH }
-    public AlertState alertState = AlertState.STEALTH;
-
-
-    public Action victimSpawnAction;
-
 
 
     private float currentGameTime = 0f;
@@ -57,9 +51,6 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
 
 
         /* Debug */
-        if (Input.GetKey(KeyCode.PageUp))
-            UpdateAlertState();
-
         if (Input.GetKey(KeyCode.Home))
             JoystickStatePanel.Instance.Show();
     }
@@ -93,20 +84,11 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
         gameState = state;
     }
 
-    public void UpdateAlertState()
-    {
-        if (alertState != AlertState.ALERT)
-        {
-            alertState = AlertState.ALERT;
-            victimSpawnAction.Invoke();
-        }
-    }
-
     public void UpdateGameScore(float actionScore = 0)
     {
         this.actionScore += actionScore;
 
-        if (alertState == AlertState.ALERT)
+        if (AlertManager.Instance.alertState == AlertManager.AlertState.ALERT)
             scoreFactor = 0f;
 
         timeScore = scoreFactor * (totalGameTime - currentGameTime);
