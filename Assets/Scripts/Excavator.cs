@@ -220,35 +220,38 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void UpdateGearState()
     {
-        GearState currentState;
-        switch (rightStick3)
+        if (engineState == EngineState.ON)
         {
-            case StickState.ACCELERATE:
-                currentState = GearState.SECOND;
-                break;
-            case StickState.FORWARD:
-                currentState = GearState.FIRST;
-                break;
-            case StickState.IDLE:
-                currentState = GearState.NEUTRAL;
-                break;
-            case StickState.BACKWARD:
-            case StickState.DECELERATE:
-                currentState = GearState.REVERSE;
-                break;
-            default:
-                currentState = GearState.NEUTRAL;
-                break;
-        }
+            GearState currentState;
+            switch (rightStick3)
+            {
+                case StickState.ACCELERATE:
+                    currentState = GearState.SECOND;
+                    break;
+                case StickState.FORWARD:
+                    currentState = GearState.FIRST;
+                    break;
+                case StickState.IDLE:
+                    currentState = GearState.NEUTRAL;
+                    break;
+                case StickState.BACKWARD:
+                case StickState.DECELERATE:
+                    currentState = GearState.REVERSE;
+                    break;
+                default:
+                    currentState = GearState.NEUTRAL;
+                    break;
+            }
 
-        if (currentState != gearState && !Input.GetKey(KeyCode.Joystick1Button2))
-        {
-            engineState = EngineState.OFF;
-            gearState = GearState.NEUTRAL;
-        }
-        else
-        {
-            gearState = currentState;
+            if (currentState != gearState && !Input.GetKey(KeyCode.Joystick1Button2))
+            {
+                engineState = EngineState.OFF;
+                gearState = GearState.NEUTRAL;
+            }
+            else
+            {
+                gearState = currentState;
+            }
         }
     }
 

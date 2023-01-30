@@ -99,12 +99,69 @@ MonoBehaviour:
     upperBound: 0.6
   - lowerBound: 0.6
     upperBound: 1
+  frameRate: 60
   totalGameTime: 90
   scoreFactor: 100
   socrePunishment: 500
   socreAward: 2000
   gameState: 0
   alertState: 1
+--- !u!1 &2102523020080483962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4656013047068716632}
+  - component: {fileID: 7821861530502041387}
+  m_Layer: 0
+  m_Name: AlertManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4656013047068716632
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102523020080483962}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4449397903789646353}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7821861530502041387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102523020080483962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5227c46fc4d725646aa972d3ee6fbacc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceThreshold: 150
+  RPMThreashold: 5500
+  alertDecay: 8000
+  alertUpperBound: 50000
+  alertLowerBound: 0
+  alertThreshold: 45000
+  alertFactor: 0.3
+  hornPunishment: 25000
+  crashPunishment: 25000
+  alertConfigs:
+  - building: {fileID: 0}
+    alert: 0
 --- !u!1 &5242746241244227880
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,6 +192,7 @@ Transform:
   m_Children:
   - {fileID: 6297663105747361120}
   - {fileID: 2823178752125795110}
+  - {fileID: 4656013047068716632}
   - {fileID: 5440859745372324829}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -154,7 +212,7 @@ PrefabInstance:
     - target: {fileID: 7858249283888037475, guid: 302c65f9b6688714e9fd7f344b7de130,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7858249283888037475, guid: 302c65f9b6688714e9fd7f344b7de130,
         type: 3}

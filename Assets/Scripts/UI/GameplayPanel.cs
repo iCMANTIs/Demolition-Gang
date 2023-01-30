@@ -12,15 +12,13 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     public TextMeshProUGUI alertText;
 
 
-    public int enemyAlert = 0;
-
     protected override void Update()
     {
         base.Update();
 
         UpdateGameTimer();
         UpdateGameSocre();
-        UpdateEnemyAlert();
+        UpdateVictimAlert();
     }
 
 
@@ -57,9 +55,9 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     }
 
 
-    public void UpdateEnemyAlert()
+    public void UpdateVictimAlert()
     {
-        alertText.text = $"{enemyAlert}";
+        alertText.text = $"{AlertManager.Instance.Alert}";
     }
 
 }
