@@ -22,8 +22,8 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     public float socrePunishment = 500f;
     public float socreAward = 2000f;
 
-    public enum GameState { PAUSED, STARTED }
-    public GameState gameState = GameState.PAUSED;
+    public enum GameState { UNSTARTED, PAUSED, STARTED }
+    public GameState gameState = GameState.UNSTARTED;
     public enum AlertState { ALERT, STEALTH }
     public AlertState alertState = AlertState.STEALTH;
 
@@ -58,9 +58,10 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
 
         /* Debug */
         if (Input.GetKey(KeyCode.PageUp))
-        {
             UpdateAlertState();
-        }
+
+        if (Input.GetKey(KeyCode.Home))
+            JoystickStatePanel.Instance.Show();
     }
 
 

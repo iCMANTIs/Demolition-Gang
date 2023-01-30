@@ -20,6 +20,7 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
 
     public List<StickIndicatorConfig> stickIndicators = new List<StickIndicatorConfig>();
     public Button startButton;
+    public Button closeButton;
 
 
     private bool isReadyToStart = false;
@@ -30,6 +31,7 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
         base.Awake();
 
         startButton.onClick.AddListener(OnClickStartButton);
+        closeButton.onClick.AddListener(OnClickCloseButton);
     }
 
 
@@ -44,6 +46,8 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
 
     public void Show()
     {
+        startButton.gameObject.SetActive(GameplayManager.Instance.gameState == GameplayManager.GameState.UNSTARTED);
+        closeButton.gameObject.SetActive(GameplayManager.Instance.gameState != GameplayManager.GameState.UNSTARTED);
         gameObject.SetActive(true);
     }
 
@@ -111,5 +115,10 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
     {
         Hide();
         GameplayManager.Instance.StartGame();
+    }
+
+    private void OnClickCloseButton()
+    {
+        Hide();
     }
 }
