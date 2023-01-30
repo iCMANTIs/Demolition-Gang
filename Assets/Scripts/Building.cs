@@ -10,23 +10,45 @@ public class Building : MonoBehaviour
     public int alertDecay = 0;
     public int alertUpperBound = 0;
     public int alertLowerBound = 0;
-    public int hornAlert = 0;
+    public int alertThreshold = 0;
+    public float alertFactor = 0.3f;
+    
+    public int hornPunishment = 0;
+
+    public GameObject victimPrefab;
+    public List<Transform> victimPosList = new List<Transform>();
 
 
     private int alert = 0;
     public int Alert { get { return alert; } }
 
+    private bool isBroken = false;
+    public bool IsBroken { get { return isBroken; } set { isBroken = value; } }
 
 
     private void Start()
     {
-        Excavator.Instance.hornAction += OnExcavatorHorn;
+        Excavator.Instance.hornAction += OnNoiseOccur;
+        GameplayManager.Instance.victimSpawnAction += SpawnVictims;
     }
 
     private void Update()
     {
         UpdateAlert();
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Excavator"))
+        {
+            if (!isBroken)
+            {
+                isBroken = true;
+                GameplayManager controller = GameplayManager.Instance;
+                controller.UpdateGameScore(controller.socreAward);
+            }
+        }
     }
 
 
@@ -44,20 +66,47 @@ public class Building : MonoBehaviour
         float distanceFactor = Math.Clamp(DistanceThreshold - distance, 0, DistanceThreshold);
         int RPMFactor = Math.Clamp(Excavator.Instance.EngineRPM - RPMThreashold, 0, int.MaxValue);
 
-        alert += Mathf.FloorToInt(RPMFactor * distanceFactor * Time.deltaTime);
+        alert += Mathf.FloorToInt(RPMFactor * distanceFactor * Time.deltaTime * alertFactor);
         alert -= Mathf.FloorToInt(alertDecay * Time.deltaTime);
         alert = Math.Clamp(alert, alertLowerBound, alertUpperBound);
+
+        Debug.Log($"{gameObject.name}, " +
+                  $"alert increase: {Mathf.FloorToInt(RPMFactor * distanceFactor * Time.deltaTime)}, " +
+                  $"alert decay: {Mathf.FloorToInt(alertDecay * Time.deltaTime)}, " +
+                  $"alert: {alert}");
+
+        GameplayPanel panel = GameplayPanel.Instance;
+        panel.enemyAlert = Math.Max(panel.enemyAlert, alert);
     }
 
-    private void OnExcavatorHorn()
+
+    private void OnNoiseOccur(string noiseType)
     {
-        alert += hornAlert;
+        switch (noiseType)
+        {
+            case "horn":
+                alert += hornPunishment;
+                break;
+            default:
+                alert += 0;
+                break;
+
+        }
+    }
+
+
+    private void SpawnVictims()
+    {
+        for (int i = 0; i < victimPosList.Count; i++)
+        {
+            GameObject victim = ObjectPoolManager.Instance.Spawn(victimPrefab, victimPosList[i].position, Quaternion.identity);
+        }
     }
 
 
     void OnGUI()
     {
-        GUI.TextArea(new Rect(0, 240, 250, 40), $"Alert : {alert}");
+        GUI.TextArea(new Rect(0, 300, 250, 40), $"Alert : {alert}");
     }
 
 }

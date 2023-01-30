@@ -18,7 +18,7 @@ public class ElectricityBox : MonoBehaviour
             if (!isBroken)
             {
                 isBroken = true;
-                GameplayController controller = GameplayController.Instance;
+                GameplayManager controller = GameplayManager.Instance;
                 controller.UpdateGameScore(controller.socreAward);
                 
                 originModel.SetActive(!isBroken);

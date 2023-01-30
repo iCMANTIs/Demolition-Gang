@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayController : DestroyableSingleton<GameplayController>
+public class GameplayManager : DestroyableSingleton<GameplayManager>
 {
     [Serializable]
     public struct JoystickLevelConfig
@@ -16,16 +16,19 @@ public class GameplayController : DestroyableSingleton<GameplayController>
     public List<JoystickLevelConfig> stickLevels = new List<JoystickLevelConfig>();
 
     [Header("GameplaySetting")]
+    public int frameRate = 60;
     public float totalGameTime = 0f;
     public float scoreFactor = 100f;
     public float socrePunishment = 500f;
     public float socreAward = 2000f;
 
-    public enum GameState { PAUSED, STARTED}
+    public enum GameState { PAUSED, STARTED }
     public GameState gameState = GameState.PAUSED;
-    public enum AlertState { ALERT, STEALTH}
+    public enum AlertState { ALERT, STEALTH }
     public AlertState alertState = AlertState.STEALTH;
 
+
+    public Action victimSpawnAction;
 
 
 
@@ -35,6 +38,8 @@ public class GameplayController : DestroyableSingleton<GameplayController>
     public float CurrentGameTime { get { return currentGameTime; } }
     public int TotalScore { get { return Mathf.FloorToInt(timeScore + actionScore); } }
 
+    
+    
     protected override void Start()
     {
         base.Start();
@@ -51,20 +56,18 @@ public class GameplayController : DestroyableSingleton<GameplayController>
 
 
 
-
+        /* Debug */
         if (Input.GetKey(KeyCode.PageUp))
         {
-            alertState = AlertState.ALERT;
+            UpdateAlertState();
         }
-
-
     }
 
 
     public void InitGame()
     {
         currentGameTime = 0f;
-
+        Application.targetFrameRate = frameRate;
         PauseGame();
     }
 
@@ -87,6 +90,15 @@ public class GameplayController : DestroyableSingleton<GameplayController>
     public void UpdateGameState(GameState state)
     {
         gameState = state;
+    }
+
+    public void UpdateAlertState()
+    {
+        if (alertState != AlertState.ALERT)
+        {
+            alertState = AlertState.ALERT;
+            victimSpawnAction.Invoke();
+        }
     }
 
     public void UpdateGameScore(float actionScore = 0)

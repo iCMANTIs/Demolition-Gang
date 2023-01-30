@@ -9,7 +9,10 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
 
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI alertText;
 
+
+    public int enemyAlert = 0;
 
     protected override void Update()
     {
@@ -17,12 +20,13 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
 
         UpdateGameTimer();
         UpdateGameSocre();
+        UpdateEnemyAlert();
     }
 
 
     public void UpdateGameTimer()
     {
-        GameplayController controller = GameplayController.Instance;
+        GameplayManager controller = GameplayManager.Instance;
         float second = controller.totalGameTime - controller.CurrentGameTime;
         string text = "";
         float sec = second % 60;
@@ -49,10 +53,13 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
 
     public void UpdateGameSocre()
     {
-
-        scoreText.text = $"{GameplayController.Instance.TotalScore}";
-
+        scoreText.text = $"{GameplayManager.Instance.TotalScore}";
     }
 
+
+    public void UpdateEnemyAlert()
+    {
+        alertText.text = $"{enemyAlert}";
+    }
 
 }

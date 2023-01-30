@@ -26,7 +26,7 @@ public class Victim : MonoBehaviour
             if (!isDead)
             {
                 isDead = true;
-                GameplayController controller = GameplayController.Instance;
+                GameplayManager controller = GameplayManager.Instance;
                 controller.UpdateGameScore(-1 * controller.socrePunishment);
                 SelfDestroy();
             }
@@ -49,6 +49,6 @@ public class Victim : MonoBehaviour
     IEnumerator DespawnCoroutine()
     {
         yield return new WaitForSecondsRealtime(4.0f);
-        Destroy(gameObject);
+        ObjectPoolManager.Instance.Despawn(gameObject);
     }
 }

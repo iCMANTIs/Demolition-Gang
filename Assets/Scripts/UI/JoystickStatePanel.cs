@@ -62,7 +62,7 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
         {
             float stickScale = 2.0f; // The value of the joystick goes from -1 to 1;
             float stickValue = Input.GetAxis(config.stickID);
-            var stickLevel = GameplayController.Instance.stickLevels[config.levelIndex];
+            var stickLevel = GameplayManager.Instance.stickLevels[config.levelIndex];
             Slider slider = config.stickIndicator.GetChild(0).GetComponent<Slider>();
             RectTransform target = config.stickIndicator.GetChild(1).GetComponent<RectTransform>();
 
@@ -110,6 +110,6 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
     private void OnClickStartButton()
     {
         Hide();
-        GameplayController.Instance.StartGame();
+        GameplayManager.Instance.StartGame();
     }
 }

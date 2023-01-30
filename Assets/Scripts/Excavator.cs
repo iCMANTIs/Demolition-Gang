@@ -38,7 +38,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     private bool isBucketRotating = false;
     private int engineRPM = 0;
     public int EngineRPM => engineRPM;
-    public Action hornAction;
+    public Action<string> hornAction;
 
 
     private string[] stickNames = 
@@ -86,7 +86,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
         
         
-        if (GameplayController.Instance.gameState != GameplayController.GameState.PAUSED)
+        if (GameplayManager.Instance.gameState != GameplayManager.GameState.PAUSED)
         {
             UpdateGearState();
             UpdateEngineRMP();
@@ -311,7 +311,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
             manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn");
 
-            hornAction.Invoke();
+            hornAction.Invoke("horn");
         }
     }
 
@@ -400,11 +400,11 @@ public class Excavator : DestroyableSingleton<Excavator>
     // Show some data 
     void OnGUI()
     {
-        GUI.TextArea(new Rect(0, 40, 250, 40), $"Left stick : {leftStick1} : {leftStick2} : {leftStick3}");
-        GUI.TextArea(new Rect(0, 80, 250, 40), $"Right stick : {rightStick1} : {rightStick2} : {rightStick3}");
-        GUI.TextArea(new Rect(0, 120, 250, 40), $"Engine State : {engineState}");
-        GUI.TextArea(new Rect(0, 160, 250, 40), $"Gear State : {gearState}");
-        GUI.TextArea(new Rect(0, 200, 250, 40), $"Engine RPM : {engineRPM}");
+        GUI.TextArea(new Rect(0, 50, 250, 40), $"Left stick : {leftStick1} : {leftStick2} : {leftStick3}");
+        GUI.TextArea(new Rect(0, 100, 250, 40), $"Right stick : {rightStick1} : {rightStick2} : {rightStick3}");
+        GUI.TextArea(new Rect(0, 150, 250, 40), $"Engine State : {engineState}");
+        GUI.TextArea(new Rect(0, 200, 250, 40), $"Gear State : {gearState}");
+        GUI.TextArea(new Rect(0, 250, 250, 40), $"Engine RPM : {engineRPM}");
         //GUI.TextArea(new Rect(0, 240, 250, 40), $"JoyStick Button : {Input.GetKey(KeyCode.Joystick1Button2)}");
     }
 
