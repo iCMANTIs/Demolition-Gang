@@ -110,6 +110,6 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
     private void OnClickStartButton()
     {
         Hide();
-        GameplayController.Instance.UnpauseGame();
+        GameplayController.Instance.StartGame();
     }
 }

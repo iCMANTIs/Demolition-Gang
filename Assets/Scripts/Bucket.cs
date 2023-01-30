@@ -9,9 +9,9 @@ public class Bucket : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Victim victim = other.transform.GetComponent<Victim>();
-        if (victim != null && victim.IsDead == false)
+        if (victim != null)
         {
-            victim.IsDead = true;
+            Debug.Log($"Victim dead!");
         }
     }
 

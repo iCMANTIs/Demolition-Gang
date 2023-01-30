@@ -78,8 +78,6 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         base.Update();
 
-
-
         UpdateJoyStickState(ref leftStick1, stickNames[0]);
         UpdateJoyStickState(ref leftStick2, stickNames[1]);
         UpdateJoyStickState(ref leftStick3, stickNames[2]);

@@ -14,6 +14,8 @@ public class Building : MonoBehaviour
 
 
     private int alert = 0;
+    public int Alert { get { return alert; } }
+
 
 
     private void Start()
@@ -28,10 +30,16 @@ public class Building : MonoBehaviour
     }
 
 
+    /* The method to calculate alert is: 
+     * 1: Calculate the result of (current RPM) - (RPM threshold)
+     * 2: If result smaller than 0, engine RPM will not affect enemy alert.
+     * 3: If result larger than 0, enemy alert = result * distance between player and building.
+     * 4: Noted that if player is further than the distance threshold, distance will not 
+     *    affect enemy alert. As player getting closer to the building, enemy is easier to be
+     *    alerted.
+     */
     private void UpdateAlert()
     {
-        Transform trans = Excavator.Instance.transform;
-
         float distance = Vector3.Distance(transform.position, Excavator.Instance.transform.position);
         float distanceFactor = Math.Clamp(DistanceThreshold - distance, 0, DistanceThreshold);
         int RPMFactor = Math.Clamp(Excavator.Instance.EngineRPM - RPMThreashold, 0, int.MaxValue);
@@ -39,8 +47,6 @@ public class Building : MonoBehaviour
         alert += Mathf.FloorToInt(RPMFactor * distanceFactor * Time.deltaTime);
         alert -= Mathf.FloorToInt(alertDecay * Time.deltaTime);
         alert = Math.Clamp(alert, alertLowerBound, alertUpperBound);
-
-
     }
 
     private void OnExcavatorHorn()

@@ -12,13 +12,28 @@ public class GameplayController : DestroyableSingleton<GameplayController>
         public float upperBound;
     }
 
-    public enum GameState { PAUSED, STARTED}
-    public GameState gameState = GameState.STARTED;
-
     [Header("Joystick")]
     public List<JoystickLevelConfig> stickLevels = new List<JoystickLevelConfig>();
 
+    [Header("GameplaySetting")]
+    public float totalGameTime = 0f;
+    public float scoreFactor = 100f;
+    public float socrePunishment = 500f;
+    public float socreAward = 2000f;
 
+    public enum GameState { PAUSED, STARTED}
+    public GameState gameState = GameState.PAUSED;
+    public enum AlertState { ALERT, STEALTH}
+    public AlertState alertState = AlertState.STEALTH;
+
+
+
+
+    private float currentGameTime = 0f;
+    private float timeScore = 0f;
+    private float actionScore = 0f;
+    public float CurrentGameTime { get { return currentGameTime; } }
+    public int TotalScore { get { return Mathf.FloorToInt(timeScore + actionScore); } }
 
     protected override void Start()
     {
@@ -27,25 +42,79 @@ public class GameplayController : DestroyableSingleton<GameplayController>
         InitGame();
     }
 
+    protected override void Update()
+    {
+        base.Update();
+
+        UpdateGameScore();
+
+
+
+
+
+        if (Input.GetKey(KeyCode.PageUp))
+        {
+            alertState = AlertState.ALERT;
+        }
+
+
+    }
+
+
+    public void InitGame()
+    {
+        currentGameTime = 0f;
+
+        PauseGame();
+    }
+
+    public void StartGame()
+    {
+        UpdateGameState(GameState.STARTED);
+        StartCoroutine(TimeCountDownCoroutine());
+    }
 
     public void PauseGame()
     {
-        UpateGameState(GameState.PAUSED);
+        UpdateGameState(GameState.PAUSED);
     }
 
     public void UnpauseGame()
     {
-        UpateGameState(GameState.STARTED);
+        UpdateGameState(GameState.STARTED);
     }
 
-    public void UpateGameState(GameState state)
+    public void UpdateGameState(GameState state)
     {
         gameState = state;
     }
 
-    public void InitGame()
+    public void UpdateGameScore(float actionScore = 0)
     {
-        PauseGame();
-        JoystickStatePanel.Instance.Show();
+        this.actionScore += actionScore;
+
+        if (alertState == AlertState.ALERT)
+            scoreFactor = 0f;
+
+        timeScore = scoreFactor * (totalGameTime - currentGameTime);
     }
+
+
+    IEnumerator TimeCountDownCoroutine()
+    {
+        while (currentGameTime <= totalGameTime)
+        {
+            if (gameState == GameState.STARTED)
+            {
+                currentGameTime += Time.deltaTime;  
+            }
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        yield break;
+    }
+
+
+
 }

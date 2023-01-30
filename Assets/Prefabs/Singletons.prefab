@@ -56,6 +56,10 @@ MonoBehaviour:
     upperBound: 0.6
   - lowerBound: 0.6
     upperBound: 0.4
+  totalGameTime: 90
+  gameScoreFactor: 100
+  gameState: 0
+  alertState: 1
 --- !u!1001 &2778664939173117374
 PrefabInstance:
   m_ObjectHideFlags: 0

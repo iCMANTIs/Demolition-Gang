@@ -23,7 +23,13 @@ public class Victim : MonoBehaviour
     {
         if (other.CompareTag("Excavator"))
         {
-            SelfDestroy();
+            if (!isDead)
+            {
+                isDead = true;
+                GameplayController controller = GameplayController.Instance;
+                controller.UpdateGameScore(-1 * controller.socrePunishment);
+                SelfDestroy();
+            }
         }
     }
 
@@ -36,7 +42,6 @@ public class Victim : MonoBehaviour
         arm2Rb.useGravity = true;  
         leg1Rb.useGravity = true;
         leg2Rb.useGravity = true;
-
 
         StartCoroutine(DespawnCoroutine());
     }
