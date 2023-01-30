@@ -9,6 +9,7 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
 
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI bonusText;
     public TextMeshProUGUI alertText;
     public TextMeshProUGUI alertStateText;
 
@@ -66,7 +67,8 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
 
     private void UpdateGameSocre()
     {
-        scoreText.text = $"{GameplayManager.Instance.TotalScore}";
+        scoreText.text = $"{GameplayManager.Instance.ActionScore}";
+        bonusText.text = $"{GameplayManager.Instance.TimeScore}";
     }
 
 

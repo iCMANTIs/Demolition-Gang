@@ -30,6 +30,8 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     private float timeScore = 0f;
     private float actionScore = 0f;
     public float CurrentGameTime { get { return currentGameTime; } }
+    public int TimeScore { get { return Mathf.FloorToInt(timeScore); } }
+    public int ActionScore { get { return Mathf.FloorToInt(actionScore); } }
     public int TotalScore { get { return Mathf.FloorToInt(timeScore + actionScore); } }
 
     
