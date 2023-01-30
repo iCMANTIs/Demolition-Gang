@@ -37,7 +37,7 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     }
 
 
-    public void UpdateGameTimer()
+    private void UpdateGameTimer()
     {
         GameplayManager controller = GameplayManager.Instance;
         float second = controller.totalGameTime - controller.CurrentGameTime;
@@ -64,23 +64,23 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     }
 
 
-    public void UpdateGameSocre()
+    private void UpdateGameSocre()
     {
         scoreText.text = $"{GameplayManager.Instance.TotalScore}";
     }
 
 
-    public void UpdateVictimAlert()
+    private void UpdateVictimAlert()
     {
         alertText.text = $"{AlertManager.Instance.Alert}";
     }
 
-    public void UpdateAlertState()
+    private void UpdateAlertState()
     {
         alertStateText.text = $"State: {AlertManager.Instance.alertState}";
     }
 
-    public void InitAlertIndicator()
+    private void InitAlertIndicator()
     {
         float alertScale = AlertManager.Instance.alertUpperBound;
         float alertThreshold = AlertManager.Instance.alertThreshold;
@@ -102,7 +102,7 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     }
 
 
-    public void UpdateAlertIndicator()
+    private void UpdateAlertIndicator()
     {
         float alertScale = AlertManager.Instance.alertUpperBound;
         float alertValue = AlertManager.Instance.Alert;

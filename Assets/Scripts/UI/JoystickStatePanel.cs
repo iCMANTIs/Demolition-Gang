@@ -35,6 +35,14 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
     }
 
 
+    protected override void Start()
+    {
+        base.Start();
+
+        InitStickIndicator();
+    }
+
+
     protected override void Update()
     {
         base.Update();
@@ -58,21 +66,13 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
     }
 
 
-    private void UpdateStickIndicator()
+    private void InitStickIndicator()
     {
-        isReadyToStart = true;
-
-        foreach(StickIndicatorConfig config in stickIndicators)
+        foreach (StickIndicatorConfig config in stickIndicators)
         {
             float stickScale = 2.0f; // The value of the joystick goes from -1 to 1;
-            float stickValue = Input.GetAxis(config.stickID);
             var stickLevel = GameplayManager.Instance.stickLevels[config.levelIndex];
-            Slider slider = config.stickIndicator.GetChild(0).GetComponent<Slider>();
             RectTransform target = config.stickIndicator.GetChild(1).GetComponent<RectTransform>();
-
-            /* Update slider position */
-            float ratio = (stickValue + 1) / stickScale;
-            slider.value = ratio;
 
             /* Update target area starting position */
             float targetStartPos = (stickLevel.lowerBound + 1) / stickScale * config.stickIndicator.sizeDelta.y;
@@ -87,6 +87,24 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
             Vector2 sizeDelta = target.sizeDelta;
             sizeDelta.y = targetSizeDelta;
             target.sizeDelta = sizeDelta;
+        }
+    }
+
+
+    private void UpdateStickIndicator()
+    {
+        isReadyToStart = true;
+
+        foreach(StickIndicatorConfig config in stickIndicators)
+        {
+            float stickScale = 2.0f; // The value of the joystick goes from -1 to 1;
+            float stickValue = Input.GetAxis(config.stickID);
+            var stickLevel = GameplayManager.Instance.stickLevels[config.levelIndex];
+            Slider slider = config.stickIndicator.GetChild(0).GetComponent<Slider>();
+
+            /* Update slider position */
+            float ratio = (stickValue + 1) / stickScale;
+            slider.value = ratio;
 
             /* Update label */
             TextMeshProUGUI labelText = slider.transform.Find("Handle Slide Area/Handle/Label/Text").GetComponent<TextMeshProUGUI>();
@@ -111,11 +129,13 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
         startButton.transform.Find("InactiveBackground").gameObject.SetActive(!isReadyToStart);
     }
 
+
     private void OnClickStartButton()
     {
         Hide();
         GameplayManager.Instance.StartGame();
     }
+
 
     private void OnClickCloseButton()
     {
