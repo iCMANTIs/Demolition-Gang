@@ -38,7 +38,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     private bool isBucketRotating = false;
     private int engineRPM = 0;
     public int EngineRPM => engineRPM;
-    public Action hornAction;
+    public Action<string> hornAction;
 
 
     private string[] stickNames = 
@@ -84,20 +84,24 @@ public class Excavator : DestroyableSingleton<Excavator>
         UpdateJoyStickState(ref rightStick1, stickNames[3]);
         UpdateJoyStickState(ref rightStick2, stickNames[4]);
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
-        UpdateGearState();
-        UpdateEngineRMP();
+        
+        
+        if (GameplayManager.Instance.gameState != GameplayManager.GameState.PAUSED)
+        {
+            UpdateGearState();
+            UpdateEngineRMP();
 
-        UpdateCamera();
-        UpdateExcavatorMovement();
-        UpdateExcavatorRotation();
-        UpdateCabRotation();
-        UpdateBoomRotation();
-        UpdateArmRotation();
+            UpdateCamera();
+            UpdateExcavatorMovement();
+            UpdateExcavatorRotation();
+            UpdateCabRotation();
+            UpdateBoomRotation();
+            UpdateArmRotation();
 
-
-        IgniteListener();
-        BucketListener();
-        HornListener();
+            IgniteListener();
+            BucketListener();
+            HornListener();
+        }
 
 
         //UpdateMovementTemp();
@@ -216,35 +220,38 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void UpdateGearState()
     {
-        GearState currentState;
-        switch (rightStick3)
+        if (engineState == EngineState.ON)
         {
-            case StickState.ACCELERATE:
-                currentState = GearState.SECOND;
-                break;
-            case StickState.FORWARD:
-                currentState = GearState.FIRST;
-                break;
-            case StickState.IDLE:
-                currentState = GearState.NEUTRAL;
-                break;
-            case StickState.BACKWARD:
-            case StickState.DECELERATE:
-                currentState = GearState.REVERSE;
-                break;
-            default:
-                currentState = GearState.NEUTRAL;
-                break;
-        }
+            GearState currentState;
+            switch (rightStick3)
+            {
+                case StickState.ACCELERATE:
+                    currentState = GearState.SECOND;
+                    break;
+                case StickState.FORWARD:
+                    currentState = GearState.FIRST;
+                    break;
+                case StickState.IDLE:
+                    currentState = GearState.NEUTRAL;
+                    break;
+                case StickState.BACKWARD:
+                case StickState.DECELERATE:
+                    currentState = GearState.REVERSE;
+                    break;
+                default:
+                    currentState = GearState.NEUTRAL;
+                    break;
+            }
 
-        if (currentState != gearState && !Input.GetKey(KeyCode.Joystick1Button2))
-        {
-            engineState = EngineState.OFF;
-            gearState = GearState.NEUTRAL;
-        }
-        else
-        {
-            gearState = currentState;
+            if (currentState != gearState && !Input.GetKey(KeyCode.Joystick1Button2))
+            {
+                engineState = EngineState.OFF;
+                gearState = GearState.NEUTRAL;
+            }
+            else
+            {
+                gearState = currentState;
+            }
         }
     }
 
@@ -307,7 +314,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
             manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn");
 
-            hornAction.Invoke();
+            hornAction.Invoke("horn");
         }
     }
 
@@ -396,11 +403,11 @@ public class Excavator : DestroyableSingleton<Excavator>
     // Show some data 
     void OnGUI()
     {
-        GUI.TextArea(new Rect(0, 40, 250, 40), $"Left stick : {leftStick1} : {leftStick2} : {leftStick3}");
-        GUI.TextArea(new Rect(0, 80, 250, 40), $"Right stick : {rightStick1} : {rightStick2} : {rightStick3}");
-        GUI.TextArea(new Rect(0, 120, 250, 40), $"Engine State : {engineState}");
-        GUI.TextArea(new Rect(0, 160, 250, 40), $"Gear State : {gearState}");
-        GUI.TextArea(new Rect(0, 200, 250, 40), $"Engine RPM : {engineRPM}");
+        GUI.TextArea(new Rect(0, 50, 250, 40), $"Left stick : {leftStick1} : {leftStick2} : {leftStick3}");
+        GUI.TextArea(new Rect(0, 100, 250, 40), $"Right stick : {rightStick1} : {rightStick2} : {rightStick3}");
+        GUI.TextArea(new Rect(0, 150, 250, 40), $"Engine State : {engineState}");
+        GUI.TextArea(new Rect(0, 200, 250, 40), $"Gear State : {gearState}");
+        GUI.TextArea(new Rect(0, 250, 250, 40), $"Engine RPM : {engineRPM}");
         //GUI.TextArea(new Rect(0, 240, 250, 40), $"JoyStick Button : {Input.GetKey(KeyCode.Joystick1Button2)}");
     }
 

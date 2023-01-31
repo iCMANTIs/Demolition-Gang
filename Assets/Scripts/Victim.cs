@@ -23,7 +23,13 @@ public class Victim : MonoBehaviour
     {
         if (other.CompareTag("Excavator"))
         {
-            SelfDestroy();
+            if (!isDead)
+            {
+                isDead = true;
+                GameplayManager controller = GameplayManager.Instance;
+                controller.UpdateGameScore(-1 * controller.socrePunishment);
+                SelfDestroy();
+            }
         }
     }
 
@@ -37,13 +43,12 @@ public class Victim : MonoBehaviour
         leg1Rb.useGravity = true;
         leg2Rb.useGravity = true;
 
-
         StartCoroutine(DespawnCoroutine());
     }
 
     IEnumerator DespawnCoroutine()
     {
         yield return new WaitForSecondsRealtime(4.0f);
-        Destroy(gameObject);
+        ObjectPoolManager.Instance.Despawn(gameObject);
     }
 }

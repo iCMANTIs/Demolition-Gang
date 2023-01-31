@@ -5,53 +5,39 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
-    public int DistanceThreshold = 0;
-    public int RPMThreashold = 0;
-    public int alertDecay = 0;
-    public int alertUpperBound = 0;
-    public int alertLowerBound = 0;
-    public int hornAlert = 0;
+    public GameObject victimPrefab;
+    public List<Transform> victimPosList = new List<Transform>();
 
-
-    private int alert = 0;
+    private bool isBroken = false;
+    public bool IsBroken { get { return isBroken; } set { isBroken = value; } }
 
 
     private void Start()
     {
-        Excavator.Instance.hornAction += OnExcavatorHorn;
-    }
-
-    private void Update()
-    {
-        UpdateAlert();
-        
+        AlertManager.Instance.alertAction += SpawnVictims;
     }
 
 
-    private void UpdateAlert()
+    private void OnTriggerEnter(Collider other)
     {
-        Transform trans = Excavator.Instance.transform;
-
-        float distance = Vector3.Distance(transform.position, Excavator.Instance.transform.position);
-        float distanceFactor = Math.Clamp(DistanceThreshold - distance, 0, DistanceThreshold);
-        int RPMFactor = Math.Clamp(Excavator.Instance.EngineRPM - RPMThreashold, 0, int.MaxValue);
-
-        alert += Mathf.FloorToInt(RPMFactor * distanceFactor * Time.deltaTime);
-        alert -= Mathf.FloorToInt(alertDecay * Time.deltaTime);
-        alert = Math.Clamp(alert, alertLowerBound, alertUpperBound);
-
-
-    }
-
-    private void OnExcavatorHorn()
-    {
-        alert += hornAlert;
+        if (other.CompareTag("Excavator"))
+        {
+            if (!isBroken)
+            {
+                isBroken = true;
+                GameplayManager controller = GameplayManager.Instance;
+                controller.UpdateGameScore(controller.socreAward);
+            }
+        }
     }
 
 
-    void OnGUI()
+    private void SpawnVictims()
     {
-        GUI.TextArea(new Rect(0, 240, 250, 40), $"Alert : {alert}");
+        for (int i = 0; i < victimPosList.Count; i++)
+        {
+            GameObject victim = ObjectPoolManager.Instance.Spawn(victimPrefab, victimPosList[i].position, Quaternion.identity);
+        }
     }
 
 }
