@@ -306,6 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8d6f371d2fcd8147b79f6b1a1f85c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  assets: {fileID: 11400000, guid: 4881c33c1d07385439b2e7eff5435bc0, type: 2}
   singleAudioSourceList:
   - {fileID: 7102696575104240336}
   - {fileID: 8452428589916925500}

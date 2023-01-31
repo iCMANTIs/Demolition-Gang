@@ -7,7 +7,8 @@ namespace SoundEffect
 {
 
     public class SoundEffectManager : DontDestroySingleton<SoundEffectManager>
-    {        
+    {
+        public SoundEffectAssets assets;
         public List<AudioSource> singleAudioSourceList = new List<AudioSource>();
         public List<AudioSource> loopAudioSourceList = new List<AudioSource>();
 
@@ -38,8 +39,11 @@ namespace SoundEffect
 
         public void PlayOneShot(AudioSource audioSource, string soundID)
         {
-            audioSource.clip = SoundEffectAssets.instance.FindSoundEffect(soundID);
-            audioSource.Play();
+            if(!audioSource.isPlaying)
+            {
+                audioSource.clip = assets.FindSoundEffect(soundID);
+                audioSource.Play();
+            }
         }
 
 
@@ -47,7 +51,7 @@ namespace SoundEffect
         {
             if (!audioSource.isPlaying)
             {
-                audioSource.clip = SoundEffectAssets.instance.FindSoundEffect(soundID);
+                audioSource.clip = assets.FindSoundEffect(soundID);
                 audioSource.Play();
             }
         }

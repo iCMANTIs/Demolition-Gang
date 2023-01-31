@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: SoundEffectAssets
   m_EditorClassIdentifier: 
   soundEffectList:
-  - soundID: Horn
+  - soundID: Horn1
     soundFile: {fileID: 8300000, guid: f0380bcabde2f574096aa4f03e9c9c0e, type: 3}
   - soundID: Collision
     soundFile: {fileID: 8300000, guid: 52a64542f861e464798b18cba3a3032e, type: 3}
+  - soundID: Horn2
+    soundFile: {fileID: 8300000, guid: 0bb1260ac990cbe4cadfa77f3561a58e, type: 3}

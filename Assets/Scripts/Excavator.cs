@@ -78,7 +78,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         base.OnDestroy();
 
-        HardwareManager.Instance.OnStick2ChangeAction -= IgniteListener;
+        //HardwareManager.Instance.OnStick2ChangeAction -= IgniteListener;
     }
 
     // Update is called once per frame 
@@ -258,6 +258,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             {
                 engineState = EngineState.OFF;
                 gearState = GearState.NEUTRAL;
+                JoystickStatePanel.Instance.Show();
             }
             else
             {
@@ -317,12 +318,19 @@ public class Excavator : DestroyableSingleton<Excavator>
     private void HornListener()
     {
         if (Input.GetKeyUp(KeyCode.Joystick1Button1) || Input.GetKeyUp(KeyCode.Joystick1Button3) ||
-            Input.GetKeyUp(KeyCode.Joystick1Button5) || Input.GetKeyUp(KeyCode.Joystick2Button1) ||
-            Input.GetKeyUp(KeyCode.Joystick2Button3) || Input.GetKeyUp(KeyCode.Joystick2Button5) ||
-            Input.GetKeyUp(KeyCode.V))
+            Input.GetKeyUp(KeyCode.Joystick1Button5) || Input.GetKeyUp(KeyCode.V))
         {
             SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
-            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn");
+            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn1");
+
+            hornAction.Invoke("horn");
+        }
+
+        else if (Input.GetKeyUp(KeyCode.Joystick2Button1) || Input.GetKeyUp(KeyCode.Joystick2Button3) || 
+                 Input.GetKeyUp(KeyCode.Joystick2Button5) || Input.GetKeyUp(KeyCode.B))
+        {
+            SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
+            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn2");
 
             hornAction.Invoke("horn");
         }
@@ -337,7 +345,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
         while (time <= igniteInterval)
         {
-            //Debug.Log($"Igniter init: {initialCount}, curr: {HardwareManager.Instance.Joystick2}");
+            Debug.Log($"Igniter init: {initialCount}, curr: {HardwareManager.Instance.Joystick2}, time: {time}");
 
 
             if (Math.Abs(HardwareManager.Instance.Joystick2 - initialCount) >= igniteThreshold)

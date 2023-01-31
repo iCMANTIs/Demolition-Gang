@@ -7,7 +7,7 @@ namespace SoundEffect
 {
 
     [CreateAssetMenu(fileName = "SoundEffectAssets", menuName = "ScriptableObject/SoundEffectAssets")]
-    public class SoundEffectAssets : ScriptableSingleton<SoundEffectAssets>
+    public class SoundEffectAssets : ScriptableObject
     {
         [Serializable]
         public struct SoundEffectConfig

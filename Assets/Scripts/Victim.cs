@@ -27,6 +27,8 @@ public class Victim : MonoBehaviour
             {
                 isDead = true;
                 GameplayManager controller = GameplayManager.Instance;
+                SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
+                manager.PlayOneShot(manager.singleAudioSourceList[1], "Collision");
                 controller.UpdateGameScore(-1 * controller.socrePunishment);
                 SelfDestroy();
             }
