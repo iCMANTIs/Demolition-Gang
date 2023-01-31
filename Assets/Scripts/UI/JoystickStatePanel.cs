@@ -98,7 +98,11 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
         foreach(StickIndicatorConfig config in stickIndicators)
         {
             float stickScale = 2.0f; // The value of the joystick goes from -1 to 1;
-            float stickValue = Input.GetAxis(config.stickID);
+            float stickValue;
+            if (config.stickID != stickIndicators[5].stickID)
+                stickValue = Input.GetAxis(config.stickID);
+            else
+                stickValue = HardwareManager.Instance.Joystick1;
             var stickLevel = GameplayManager.Instance.stickLevels[config.levelIndex];
             Slider slider = config.stickIndicator.GetChild(0).GetComponent<Slider>();
 

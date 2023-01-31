@@ -111,7 +111,11 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void UpdateJoyStickState(ref StickState stick, string stickName)
     {
-        float value = Input.GetAxis(stickName);
+        float value;
+        if (stickName != stickNames[5])
+            value = Input.GetAxis(stickName);
+        else
+            value = HardwareManager.Instance.Joystick1;
 
         //Debug.Log($"Stick {stickName} value {value}");
 

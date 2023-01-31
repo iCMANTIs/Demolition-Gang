@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Uduino;
 
-public class HardManager : DontDestroySingleton<HardManager>
+public class HardwareManager : DontDestroySingleton<HardwareManager>
 {
     private bool isButtonPressed;
     private bool buttonPressedThisFrame;
@@ -14,8 +14,11 @@ public class HardManager : DontDestroySingleton<HardManager>
     public Action<string> actionIgnite;
 
 
-    private int joystick1;
-    private int joystick2;
+    private float joystick1;
+    private float joystick2;
+
+    public float Joystick1 { get { return joystick1; } }
+    public float Joystick2 { get { return joystick2; } }
 
 
     protected override void Awake()
@@ -96,16 +99,13 @@ public class HardManager : DontDestroySingleton<HardManager>
     {
         float value = float.Parse(data);
 
-
         float factor = 0.5f;        // Factor = [(max - min) / original_scale] * new_scale = (0 + 4) / 5 * 2
         float offset = 1.0f;        // Offset = max * factor - 1
 
         value = value * factor + offset;
+        joystick1 = value;
 
         Debug.Log($"Old stick value {data}, New stick value {value}");
-
-
-        joystick1 = int.Parse(data);
     }
 
     private void UpdateJoystick2(string data)
