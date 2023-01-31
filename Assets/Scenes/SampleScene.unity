@@ -289,14 +289,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7821861530502041387, guid: e5dd9da8ff61fa44c959bb414a7082ee,
         type: 3}
-      propertyPath: alertDecay
-      value: 8000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7821861530502041387, guid: e5dd9da8ff61fa44c959bb414a7082ee,
-        type: 3}
       propertyPath: alertConfigs.Array.data[0].building
       value: 
       objectReference: {fileID: 2143570827}
+    - target: {fileID: 9175720579217650242, guid: e5dd9da8ff61fa44c959bb414a7082ee,
+        type: 3}
+      propertyPath: ManagerState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9175720579217650242, guid: e5dd9da8ff61fa44c959bb414a7082ee,
+        type: 3}
+      propertyPath: delayBeforeDiscover
+      value: 1.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5dd9da8ff61fa44c959bb414a7082ee, type: 3}
 --- !u!1 &705507993
@@ -569,7 +574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &807800349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -736,6 +741,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GameplayPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 2984914193551628922, guid: a8138d97e70ad9b40b0f0dde6f4e9c55,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2984914193551628922, guid: a8138d97e70ad9b40b0f0dde6f4e9c55,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441538001279127087, guid: a8138d97e70ad9b40b0f0dde6f4e9c55,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441538001279127087, guid: a8138d97e70ad9b40b0f0dde6f4e9c55,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4441538001279127087, guid: a8138d97e70ad9b40b0f0dde6f4e9c55,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8138d97e70ad9b40b0f0dde6f4e9c55, type: 3}

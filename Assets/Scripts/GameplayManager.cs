@@ -41,6 +41,9 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
         base.Start();
 
         InitGame();
+
+
+
     }
 
     protected override void Update()

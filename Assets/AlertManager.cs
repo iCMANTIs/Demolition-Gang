@@ -79,10 +79,10 @@ public class AlertManager : DestroyableSingleton<AlertManager>
 
             alertConfigs[i] = config;
 
-            Debug.Log($"{config.building.name}, " +
-                      $"alert increase: {Mathf.FloorToInt(RPMFactor * distanceFactor * Time.deltaTime * alertFactor)}, " +
-                      $"alert decay: {Mathf.FloorToInt(alertDecay * Time.deltaTime)}, " +
-                      $"alert: {config.alert},  current alert: {alert}" );
+            //Debug.Log($"{config.building.name}, " +
+            //          $"alert increase: {Mathf.FloorToInt(RPMFactor * distanceFactor * Time.deltaTime * alertFactor)}, " +
+            //          $"alert decay: {Mathf.FloorToInt(alertDecay * Time.deltaTime)}, " +
+            //          $"alert: {config.alert},  current alert: {alert}" );
         }
     }
 
