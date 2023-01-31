@@ -67,11 +67,19 @@ public class Excavator : DestroyableSingleton<Excavator>
 
 
 
-    protected override void Awake()
+    protected override void Start()
     {
-        base.Awake();
+        base.Start();
+
+        HardwareManager.Instance.OnStick2ChangeAction += IgniteListener;
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        HardwareManager.Instance.OnStick2ChangeAction -= IgniteListener;
+    }
 
     // Update is called once per frame 
     protected override void Update()
@@ -86,7 +94,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         UpdateJoyStickState(ref rightStick3, stickNames[5]);
         
         
-        if (GameplayManager.Instance.gameState != GameplayManager.GameState.PAUSED)
+        if (GameplayManager.Instance.gameState == GameplayManager.GameState.STARTED)
         {
             UpdateGearState();
             UpdateEngineRMP();
@@ -288,8 +296,13 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void IgniteListener()
     {
-        if ((Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Z)) 
-            && engineState == EngineState.OFF)
+        //if ((Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Z)) 
+        //    && engineState == EngineState.OFF)
+        //{
+        //    StartCoroutine(IgniteCoroutine());
+        //}
+
+        if (engineState == EngineState.OFF)
         {
             StartCoroutine(IgniteCoroutine());
         }
@@ -329,21 +342,30 @@ public class Excavator : DestroyableSingleton<Excavator>
         float time = 0f;
         engineState = EngineState.IGNITE;
 
-        while (time <= 10f)
+        float initialCount = HardwareManager.Instance.Joystick2;
+
+        while (time <= igniteInterval)
         {
-            if (count == igniteThreshold)
+            //if (count >= igniteThreshold)
+            //{
+            //    engineState = EngineState.ON;
+            //    Debug.Log("Engine ON");
+            //    yield break;
+            //}
+
+            //if (Input.GetKeyUp(KeyCode.Joystick1Button0))
+            //    count++;
+            //else if (Input.GetKeyUp(KeyCode.Joystick2Button0))
+            //    count++;
+            //else if (Input.GetKeyUp(KeyCode.Z))
+            //    count++;
+
+            if (Math.Abs(HardwareManager.Instance.Joystick2 - initialCount) >= igniteThreshold)
             {
                 engineState = EngineState.ON;
                 Debug.Log("Engine ON");
                 yield break;
             }
-
-            if (Input.GetKeyUp(KeyCode.Joystick1Button0))
-                count++;
-            else if (Input.GetKeyUp(KeyCode.Joystick2Button0))
-                count++;
-            else if (Input.GetKeyUp(KeyCode.Z))
-                count++;
 
             time += Time.deltaTime;
             yield return null;

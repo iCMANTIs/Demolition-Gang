@@ -456,7 +456,7 @@ MonoBehaviour:
   bucketUpperBound: 80
   buckerLowerBound: 320
   igniteInterval: 10
-  igniteThreshold: 10
+  igniteThreshold: 40
   RPMSpeed: 1600
   RPMDecay: 1200
   RPMUpperBound: 7000

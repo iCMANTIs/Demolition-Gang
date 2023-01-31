@@ -65,7 +65,6 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     {
         currentGameTime = 0f;
         Application.targetFrameRate = frameRate;
-        PauseGame();
     }
 
     public void StartGame()

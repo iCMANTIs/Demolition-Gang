@@ -12,6 +12,7 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
 
     public Action<string> action;
     public Action<string> actionIgnite;
+    public Action OnStick2ChangeAction;
 
 
     private float joystick1;
@@ -19,6 +20,8 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
 
     public float Joystick1 { get { return joystick1; } }
     public float Joystick2 { get { return joystick2; } }
+
+
 
 
     protected override void Awake()
@@ -84,6 +87,8 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
         }
         else if (data.Length > 2 && data.Substring(0, 2) == "IG")
         {
+            OnStick2ChangeAction.Invoke();
+
             actionIgnite.Invoke(data);
             UpdateJoystick2(data);
         }
@@ -98,19 +103,22 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
     private void UpdateJoystick1(string data)
     {
         float value = float.Parse(data);
-
         float factor = 0.5f;        // Factor = [(max - min) / original_scale] * new_scale = (0 + 4) / 5 * 2
         float offset = 1.0f;        // Offset = max * factor - 1
 
         value = value * factor + offset;
         joystick1 = value;
 
-        Debug.Log($"Old stick value {data}, New stick value {value}");
+        //Debug.Log($"Old stick value {data}, New stick value {value}");
     }
 
     private void UpdateJoystick2(string data)
     {
-        joystick2 = int.Parse(data.Substring(2));
+        float value = float.Parse(data.Substring(2)); ;
+        joystick2 = value;
+
+
+        Debug.Log($"Hardware stick 2 value {value}");
     }
 
     //Return true during the frame that the key specified by the parameter is pressed.
