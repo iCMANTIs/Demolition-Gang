@@ -106,7 +106,6 @@ public class Excavator : DestroyableSingleton<Excavator>
             UpdateBoomRotation();
             UpdateArmRotation();
 
-            IgniteListener();
             BucketListener();
             HornListener();
         }
@@ -296,12 +295,6 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void IgniteListener()
     {
-        //if ((Input.GetKeyDown(KeyCode.Joystick1Button0) || Input.GetKeyDown(KeyCode.Joystick2Button0) || Input.GetKeyDown(KeyCode.Z)) 
-        //    && engineState == EngineState.OFF)
-        //{
-        //    StartCoroutine(IgniteCoroutine());
-        //}
-
         if (engineState == EngineState.OFF)
         {
             StartCoroutine(IgniteCoroutine());
@@ -338,27 +331,14 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private IEnumerator IgniteCoroutine()
     {
-        float count = 0f;
         float time = 0f;
-        engineState = EngineState.IGNITE;
-
         float initialCount = HardwareManager.Instance.Joystick2;
+        engineState = EngineState.IGNITE;
 
         while (time <= igniteInterval)
         {
-            //if (count >= igniteThreshold)
-            //{
-            //    engineState = EngineState.ON;
-            //    Debug.Log("Engine ON");
-            //    yield break;
-            //}
+            //Debug.Log($"Igniter init: {initialCount}, curr: {HardwareManager.Instance.Joystick2}");
 
-            //if (Input.GetKeyUp(KeyCode.Joystick1Button0))
-            //    count++;
-            //else if (Input.GetKeyUp(KeyCode.Joystick2Button0))
-            //    count++;
-            //else if (Input.GetKeyUp(KeyCode.Z))
-            //    count++;
 
             if (Math.Abs(HardwareManager.Instance.Joystick2 - initialCount) >= igniteThreshold)
             {
