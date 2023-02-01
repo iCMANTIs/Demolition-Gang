@@ -112,9 +112,9 @@ public class Excavator : DestroyableSingleton<Excavator>
 
         /* Debug */
         //UpdateMovementTemp();
-        Debug.Log($"Boom angle: {boom.transform.localEulerAngles}");
-        Debug.Log($"Arm angle: {arm.transform.localEulerAngles}");
-        Debug.Log($"Bucket angle: {bucket.transform.localEulerAngles}");
+        //Debug.Log($"Boom angle: {boom.transform.localEulerAngles}");
+        //Debug.Log($"Arm angle: {arm.transform.localEulerAngles}");
+        //Debug.Log($"Bucket angle: {bucket.transform.localEulerAngles}");
     }
 
 
