@@ -281,8 +281,8 @@ InputManager:
     m_Name: LeftJoyStickS1
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: 
+    negativeButton: q
+    positiveButton: w
     altNegativeButton: 
     altPositiveButton: 
     gravity: 0
@@ -290,15 +290,15 @@ InputManager:
     sensitivity: 1
     snap: 0
     invert: 1
-    type: 2
+    type: 0
     axis: 0
     joyNum: 1
   - serializedVersion: 3
     m_Name: LeftJoyStickS2
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: 
+    negativeButton: e
+    positiveButton: r
     altNegativeButton: 
     altPositiveButton: 
     gravity: 0
@@ -306,15 +306,15 @@ InputManager:
     sensitivity: 1
     snap: 0
     invert: 1
-    type: 2
+    type: 0
     axis: 1
     joyNum: 1
   - serializedVersion: 3
     m_Name: LeftJoyStickS3
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: 
+    negativeButton: t
+    positiveButton: y
     altNegativeButton: 
     altPositiveButton: 
     gravity: 0
@@ -322,7 +322,7 @@ InputManager:
     sensitivity: 1
     snap: 0
     invert: 1
-    type: 2
+    type: 0
     axis: 2
     joyNum: 1
   - serializedVersion: 3

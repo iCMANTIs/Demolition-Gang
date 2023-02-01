@@ -35,6 +35,8 @@ public class Excavator : DestroyableSingleton<Excavator>
     public GameObject bucket;
 
 
+    public bool isDebugMode = false;
+
     private bool isBucketRotating = false;
     private int engineRPM = 0;
     public int EngineRPM => engineRPM;
@@ -72,14 +74,11 @@ public class Excavator : DestroyableSingleton<Excavator>
         base.Start();
 
         HardwareManager.Instance.OnStick2ChangeAction += IgniteListener;
+
+        InitExcavator();
     }
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
 
-        //HardwareManager.Instance.OnStick2ChangeAction -= IgniteListener;
-    }
 
     // Update is called once per frame 
     protected override void Update()
@@ -111,18 +110,31 @@ public class Excavator : DestroyableSingleton<Excavator>
         }
 
 
+        /* Debug */
         //UpdateMovementTemp();
+        Debug.Log($"Boom angle: {boom.transform.localEulerAngles}");
+        Debug.Log($"Arm angle: {arm.transform.localEulerAngles}");
+        Debug.Log($"Bucket angle: {bucket.transform.localEulerAngles}");
     }
 
+
+    private void InitExcavator()
+    {
+        if (isDebugMode)
+        {
+            engineState = EngineState.ON;
+        }
+    }
 
 
     private void UpdateJoyStickState(ref StickState stick, string stickName)
     {
         float value;
-        if (stickName != stickNames[5])
-            value = Input.GetAxis(stickName);
-        else
+
+        if (stickName == stickNames[5] && !isDebugMode)
             value = HardwareManager.Instance.Joystick1;
+        else
+            value = Input.GetAxis(stickName);
 
         //Debug.Log($"Stick {stickName} value {value}");
 
@@ -200,12 +212,16 @@ public class Excavator : DestroyableSingleton<Excavator>
             boom.transform.Rotate(axis, angularSpeed, Space.World);
         }
 
-        /* Limit boom rotation within specific angle */
-        Vector3 eularAngle = boom.transform.localEulerAngles;
-        if (eularAngle.z > boomUpperBound)
-            boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, boomUpperBound);
-        if (eularAngle.z < boomLowerBound)
-            boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, boomLowerBound);
+        /* Limit boom rotation within specific angle, 20 > x > 335 (across 0 degree) */
+        Vector3 eulerAngle = boom.transform.localEulerAngles;
+        if (eulerAngle.z > boomUpperBound && eulerAngle.z < 180)
+            boom.transform.localRotation = Quaternion.Euler(eulerAngle.x, eulerAngle.y, boomUpperBound);
+        if (eulerAngle.z < boomLowerBound && eulerAngle.z > 180)
+            boom.transform.localRotation = Quaternion.Euler(eulerAngle.x, eulerAngle.y, boomLowerBound);
+        //if (eularAngle.z > boomUpperBound)
+        //    boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, boomUpperBound);
+        //if (eularAngle.z < boomLowerBound)
+        //    boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, boomLowerBound);
     }
 
 
@@ -254,7 +270,7 @@ public class Excavator : DestroyableSingleton<Excavator>
                     break;
             }
 
-            if (currentState != gearState && !Input.GetKey(KeyCode.Joystick1Button2))
+            if (currentState != gearState && !Input.GetKey(KeyCode.Joystick1Button2) && !isDebugMode)
             {
                 engineState = EngineState.OFF;
                 gearState = GearState.NEUTRAL;
