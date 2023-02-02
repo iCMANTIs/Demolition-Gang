@@ -3,7 +3,77 @@ guid: 5d57da1443f2ff4418fb047dba097e6f
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6Bldg50
+    second: {fileID: 2800000, guid: 252b654a534bf35499a9b9d92d834f2e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6Bldg50Base
+    second: {fileID: 2800000, guid: 819738e01ab66ac41bca92a4a2bacaa3, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6Bollard_Color
+    second: {fileID: 2800000, guid: 9b4ef85ef0b1c2045aa96bc271240c3f, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6Brick04_Color
+    second: {fileID: 2800000, guid: b83b6c5817072584f8c2b6c47cbe55a4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6Concrete01_Color
+    second: {fileID: 2800000, guid: cab44b67cc5ede147930aebc162df9e2, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6Doors01_Color
+    second: {fileID: 2800000, guid: fa98579a27e31c24aa6848718b5e093e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6MetalDark03_Color
+    second: {fileID: 2800000, guid: baee5a49d301c8a4a8b2eb3fed498745, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6PipesLight
+    second: {fileID: 2800000, guid: b300bc296b9c57843a83e7bdfa9f3f4d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6PlyWood_Color
+    second: {fileID: 2800000, guid: 392a380bd2d1e444f9853ec83a5a4f05, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6PowerBox02_Color
+    second: {fileID: 2800000, guid: 7b69b7b0ecbb5d84981bb8398ee3a38e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6RollupDoors02_Color
+    second: {fileID: 2800000, guid: 74b0318a4baca3d4fa966bdf878a38fd, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6Vents02_Color
+    second: {fileID: 2800000, guid: 82ae3248011cc214c99cbe291fe02566, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6Windows01_Color
+    second: {fileID: 2800000, guid: 77007a514dbaaed4a9ae33b1b2a36b5b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: uf6WindowsOld_Color
+    second: {fileID: 2800000, guid: 7cac5600145cff34080de57915fd3e9d, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
