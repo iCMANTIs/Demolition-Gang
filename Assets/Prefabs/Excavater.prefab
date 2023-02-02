@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 2378922449515134400}
   m_Layer: 0
   m_Name: Boom
-  m_TagString: Untagged
+  m_TagString: Excavator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 7788013352475077815}
   m_Layer: 0
   m_Name: Cab
-  m_TagString: Untagged
+  m_TagString: Excavator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 709492069107635401}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Excavator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -626,9 +626,10 @@ GameObject:
   - component: {fileID: 7900760462875152742}
   - component: {fileID: 1921031671800749471}
   - component: {fileID: 8174574102261090470}
+  - component: {fileID: 8211720097920959510}
   m_Layer: 0
   m_Name: Bucket
-  m_TagString: Untagged
+  m_TagString: Excavator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -678,6 +679,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &8211720097920959510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8328083471866359883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85293c17270b1c54f8241bd24d90abe1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8974224061935400593
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +704,7 @@ GameObject:
   - component: {fileID: 1587726679294161779}
   m_Layer: 0
   m_Name: Arm
-  m_TagString: Untagged
+  m_TagString: Excavator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -44,6 +44,8 @@ namespace SoundEffect
                 audioSource.clip = assets.FindSoundEffect(soundID);
                 audioSource.Play();
             }
+            else
+                Debug.LogWarning($"Audio Source {audioSource.name} is occupied!");
         }
 
 
@@ -54,6 +56,8 @@ namespace SoundEffect
                 audioSource.clip = assets.FindSoundEffect(soundID);
                 audioSource.Play();
             }
+            else
+                Debug.LogWarning($"Audio Source {audioSource.name} is occupied!");
         }
 
 

@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using TMPro;
 
 public class GameplayPanel : DestroyableSingleton<GameplayPanel>
 {
+
+    public Image RPMImage;
+    public VideoPlayer steamVideo;
 
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI scoreText;
@@ -13,6 +17,8 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     public TextMeshProUGUI alertText;
     public TextMeshProUGUI alertStateText;
     public TextMeshProUGUI trackTimerText;
+    public TextMeshProUGUI RPMText;
+    public TextMeshProUGUI GearText;
 
     public RectTransform alertIndicator;
 
@@ -36,6 +42,8 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
         UpdateGameSocre();
         UpdateVictimAlert();
         UpdateAlertIndicator();
+        UpdateRPM();
+        UpdateGearState();
     }
 
 
@@ -115,4 +123,52 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
         float ratio = alertValue / alertScale;
         slider.value = ratio;
     }
+
+    private void UpdateRPM()
+    {
+        float RPM = Excavator.Instance.EngineRPM / 1000.0f;
+        float ratio = Excavator.Instance.EngineRPM * 1.0f / Excavator.Instance.RPMUpperBound;
+
+
+        RPMImage.fillAmount = ratio;
+        RPMText.text = $"{RPM.ToString("0.0")}";
+
+        //Debug.Log($"RPM: {Excavator.Instance.EngineRPM}, Threshold: {AlertManager.Instance.RPMThreashold}");
+        //if (Excavator.Instance.EngineRPM >= AlertManager.Instance.RPMThreashold)
+        //    PlaySteamVideo(true);
+        //else
+        //    PlaySteamVideo(false);
+    }
+
+    private void UpdateGearState()
+    {
+        switch (Excavator.Instance.ExcavatorGearState)
+        {
+            case Excavator.GearState.REVERSE:
+                GearText.text = $"R";
+                break;
+            case Excavator.GearState.NEUTRAL:
+                GearText.text = $"N";
+                break;
+            case Excavator.GearState.FIRST:
+                GearText.text = $"I";
+                break;
+            case Excavator.GearState.SECOND:
+                GearText.text = $"II";
+                break;
+            default:
+                GearText.text = $"N";
+                break;
+        }
+    }
+    
+    private void PlaySteamVideo(bool isPlay)
+    {
+        //Debug.LogError($"{steamVideo.isPlaying}");
+        if (isPlay && !steamVideo.isPlaying)
+            steamVideo.Play();
+        else if (!isPlay)
+            steamVideo.Stop();
+    }
+
 }

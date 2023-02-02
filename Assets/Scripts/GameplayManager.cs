@@ -50,11 +50,12 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
         UpdateGameScore();
 
 
-
-
         /* Debug */
         if (Input.GetKey(KeyCode.Home))
             JoystickStatePanel.Instance.Show();
+        if (Input.GetKey(KeyCode.Escape))
+            ExitGame();
+
     }
 
 
@@ -79,6 +80,12 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     {
         UpdateGameState(GameState.STARTED);
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
 
     public void UpdateGameState(GameState state)
     {

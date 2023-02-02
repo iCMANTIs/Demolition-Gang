@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SoundEffect;
 
 public class Excavator : DestroyableSingleton<Excavator>
 {
@@ -39,6 +40,8 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private bool isBucketRotating = false;
     private int engineRPM = 0;
+    private AudioSource engineIdleSource;
+    private AudioSource engineAccelSource;
     public int EngineRPM => engineRPM;
     public Action<string> hornAction;
 
@@ -61,11 +64,14 @@ public class Excavator : DestroyableSingleton<Excavator>
     StickState rightStick2 = StickState.IDLE;
     StickState rightStick3 = StickState.IDLE;
 
-    enum EngineState { ON = 1, IGNITE = 0, OFF = -1}
-    EngineState engineState = EngineState.OFF;
+    public enum EngineState { ON = 1, IGNITE = 0, OFF = -1}
+    private EngineState engineState = EngineState.OFF;
+    public EngineState ExcavatorEngineState { get { return engineState; } }
 
-    enum GearState { THIRD = 3, SECOND = 2, FIRST = 1, NEUTRAL = 0, REVERSE = -1}
-    GearState gearState = GearState.NEUTRAL;
+    public enum GearState { THIRD = 3, SECOND = 2, FIRST = 1, NEUTRAL = 0, REVERSE = -1}
+    private GearState gearState = GearState.NEUTRAL;
+    public GearState ExcavatorGearState { get { return gearState; } }
+
 
 
 
@@ -79,8 +85,6 @@ public class Excavator : DestroyableSingleton<Excavator>
     }
 
 
-
-    // Update is called once per frame 
     protected override void Update()
     {
         base.Update();
@@ -174,6 +178,27 @@ public class Excavator : DestroyableSingleton<Excavator>
                     break;
             }
 
+            SoundEffectManager manager = SoundEffectManager.Instance;
+            if ((leftStick1 == StickState.DECELERATE && rightStick1 == StickState.IDLE) ||
+                gearState == GearState.NEUTRAL)
+            {
+                if (engineAccelSource != null)
+                {
+                    manager.Stop(engineAccelSource);
+                    engineAccelSource = null;
+                }
+            }
+            else
+            {
+                if (engineAccelSource == null)
+                    engineAccelSource = manager.FindAvailableLoopAudioSource();
+
+                if (engineAccelSource != null && 
+                    engineAccelSource.isPlaying == false)
+                    manager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
+            }
+
+
             Vector3 direction = transform.right;
             speed = speed * (int)gearState * speedDamp * Time.deltaTime;
             transform.Translate(direction * speed, Space.World);
@@ -185,8 +210,28 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         if (engineState == EngineState.ON)
         {
+            SoundEffectManager manager = SoundEffectManager.Instance;
+            if ((leftStick1 == StickState.DECELERATE && rightStick1 == StickState.IDLE) ||
+                gearState == GearState.NEUTRAL)
+            {
+                if (engineAccelSource != null)
+                {
+                    manager.Stop(engineAccelSource);
+                    engineAccelSource = null;
+                }
+            }
+            else
+            {
+                if (engineAccelSource == null)
+                    engineAccelSource = manager.FindAvailableLoopAudioSource();
+
+                if (engineAccelSource != null &&
+                    engineAccelSource.isPlaying == false)
+                    manager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
+            }
+
             Vector3 axis = transform.up;
-            float angularSpeed = -1 * (int)rightStick1 * Time.deltaTime;
+            float angularSpeed = -1 * (int)rightStick1 * (int)gearState * Time.deltaTime;
             transform.Rotate(axis, angularSpeed, Space.World);
         }
     }
@@ -274,6 +319,18 @@ public class Excavator : DestroyableSingleton<Excavator>
             {
                 engineState = EngineState.OFF;
                 gearState = GearState.NEUTRAL;
+
+                SoundEffectManager manager = SoundEffectManager.Instance;
+                AudioSource flameoutSource = manager.FindAvailableSingleAudioSource();
+                manager.PlayOneShot(flameoutSource, "Engine_Flameout");
+                if (engineIdleSource != null)
+                    manager.Stop(engineIdleSource);
+                if (engineAccelSource != null)
+                {
+                    manager.Stop(engineAccelSource);
+                    engineAccelSource = null;
+                }
+
                 JoystickStatePanel.Instance.Show();
             }
             else
@@ -312,7 +369,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void IgniteListener()
     {
-        if (engineState == EngineState.OFF)
+        if (engineState == EngineState.OFF && GameplayManager.Instance.gameState == GameplayManager.GameState.STARTED)
         {
             StartCoroutine(IgniteCoroutine());
         }
@@ -333,20 +390,20 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void HornListener()
     {
-        if (Input.GetKeyUp(KeyCode.Joystick1Button1) || Input.GetKeyUp(KeyCode.Joystick1Button3) ||
-            Input.GetKeyUp(KeyCode.Joystick1Button5) || Input.GetKeyUp(KeyCode.V))
+        if (Input.GetKeyUp(KeyCode.Joystick1Button1) || Input.GetKeyUp(KeyCode.Joystick1Button4) ||  
+            Input.GetKeyUp(KeyCode.V))
         {
-            SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
-            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn1");
+            SoundEffectManager manager = SoundEffectManager.Instance;
+            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn_Farting");
 
             hornAction.Invoke("horn");
         }
 
-        else if (Input.GetKeyUp(KeyCode.Joystick2Button1) || Input.GetKeyUp(KeyCode.Joystick2Button3) || 
-                 Input.GetKeyUp(KeyCode.Joystick2Button5) || Input.GetKeyUp(KeyCode.B))
+        else if (Input.GetKeyUp(KeyCode.Joystick1Button3) || Input.GetKeyUp(KeyCode.Joystick1Button5) || 
+                 Input.GetKeyUp(KeyCode.B))
         {
-            SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
-            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn2");
+            SoundEffectManager manager = SoundEffectManager.Instance;
+            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn_Truck");
 
             hornAction.Invoke("horn");
         }
@@ -357,6 +414,11 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         float time = 0f;
         float initialCount = HardwareManager.Instance.Joystick2;
+        
+        SoundEffectManager manager = SoundEffectManager.Instance;
+        AudioSource igniteSource = manager.FindAvailableLoopAudioSource();
+        manager.PlayInLoop(igniteSource, "Engine_Igniting");
+
         engineState = EngineState.IGNITE;
 
         while (time <= igniteInterval)
@@ -367,6 +429,15 @@ public class Excavator : DestroyableSingleton<Excavator>
             if (Math.Abs(HardwareManager.Instance.Joystick2 - initialCount) >= igniteThreshold)
             {
                 engineState = EngineState.ON;
+                
+                AudioSource successSource = manager.FindAvailableSingleAudioSource();
+                manager.Stop(igniteSource);
+                manager.PlayOneShot(successSource, "Engine_Ignite_Success");
+
+                yield return new WaitForSecondsRealtime(2f);
+                engineIdleSource = manager.FindAvailableLoopAudioSource();
+                manager.PlayInLoop(engineIdleSource, "Engine_Idling");
+
                 Debug.Log("Engine ON");
                 yield break;
             }
@@ -375,6 +446,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             yield return null;
         }
 
+        manager.Stop(igniteSource);
         engineState = EngineState.OFF;
         yield break;
     }

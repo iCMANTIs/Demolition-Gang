@@ -13,9 +13,25 @@ MonoBehaviour:
   m_Name: SoundEffectAssets
   m_EditorClassIdentifier: 
   soundEffectList:
-  - soundID: Horn1
+  - soundID: Horn_Farting
     soundFile: {fileID: 8300000, guid: f0380bcabde2f574096aa4f03e9c9c0e, type: 3}
-  - soundID: Horn2
-    soundFile: {fileID: 8300000, guid: 0bb1260ac990cbe4cadfa77f3561a58e, type: 3}
+  - soundID: Horn_Truck
+    soundFile: {fileID: 8300000, guid: 8439c51acf4b00048b8a263c6b1df52b, type: 3}
+  - soundID: Song
+    soundFile: {fileID: 8300000, guid: 2ab74b8eb3a8353418e6e5be44c3a4f7, type: 3}
   - soundID: Collision
     soundFile: {fileID: 8300000, guid: 52a64542f861e464798b18cba3a3032e, type: 3}
+  - soundID: Collision_Building
+    soundFile: {fileID: 8300000, guid: 06260773dd4685a4baca50407820eb7f, type: 3}
+  - soundID: Stick_Reset
+    soundFile: {fileID: 8300000, guid: 5d0422a5642a8094a809ca8b364a0f82, type: 3}
+  - soundID: Engine_Igniting
+    soundFile: {fileID: 8300000, guid: c943ed08014a5d74884e6335aa3200eb, type: 3}
+  - soundID: Engine_Ignite_Success
+    soundFile: {fileID: 8300000, guid: 1978f71fd0c13744bbdf4ef6505715f3, type: 3}
+  - soundID: Engine_Idling
+    soundFile: {fileID: 8300000, guid: e7e653ac9abbef445a14bd4b24633028, type: 3}
+  - soundID: Engine_Accelerating
+    soundFile: {fileID: 8300000, guid: 2875f2e9353028147bf9d7e44ecfe541, type: 3}
+  - soundID: Engine_Flameout
+    soundFile: {fileID: 8300000, guid: 67d0430410f4c294b9051b61de46ea22, type: 3}
