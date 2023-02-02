@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SoundEffect;
 
 public class ElectricityBox : MonoBehaviour
 {
@@ -20,7 +21,9 @@ public class ElectricityBox : MonoBehaviour
                 isBroken = true;
                 GameplayManager controller = GameplayManager.Instance;
                 controller.UpdateGameScore(controller.socreAward);
-                
+                SoundEffectManager manager = SoundEffectManager.Instance;
+                manager.PlayOneShot(manager.singleAudioSourceList[1], "Collision");
+
                 originModel.SetActive(!isBroken);
                 brokenModel.SetActive(isBroken);
 

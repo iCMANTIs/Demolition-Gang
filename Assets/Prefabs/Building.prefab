@@ -114,6 +114,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   victimPrefab: {fileID: 1166109287169176219, guid: 617934d7292f3af4198bbf47483451e2,
     type: 3}
+  originModel: {fileID: 2203108151237556895}
+  brokenModel: {fileID: 8314268463384873012}
   victimPosList:
   - {fileID: 2532339150333439021}
   - {fileID: 5014879912072742030}
@@ -249,11 +251,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: house original
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e337ed2962e17e44797125a212e52c71,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e337ed2962e17e44797125a212e52c71, type: 3}
 --- !u!4 &1574240738864554021 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e337ed2962e17e44797125a212e52c71,
+    type: 3}
+  m_PrefabInstance: {fileID: 1320235155377686478}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2203108151237556895 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e337ed2962e17e44797125a212e52c71,
     type: 3}
   m_PrefabInstance: {fileID: 1320235155377686478}
   m_PrefabAsset: {fileID: 0}
@@ -356,6 +369,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec35f7bdca721394b99cf827e8531fd7, type: 3}
+--- !u!1 &8314268463384873012 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ec35f7bdca721394b99cf827e8531fd7,
+    type: 3}
+  m_PrefabInstance: {fileID: 9197299095147181413}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8658706507299918478 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ec35f7bdca721394b99cf827e8531fd7,

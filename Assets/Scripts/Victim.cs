@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SoundEffect;
 
 public class Victim : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Victim : MonoBehaviour
     public Rigidbody leg1Rb;
     public Rigidbody leg2Rb;
 
-
+    public Animator animator;
 
 
     private void OnTriggerEnter(Collider other)
@@ -26,10 +27,14 @@ public class Victim : MonoBehaviour
             if (!isDead)
             {
                 isDead = true;
-                GameplayManager controller = GameplayManager.Instance;
-                SoundEffect.SoundEffectManager manager = SoundEffect.SoundEffectManager.Instance;
+                SoundEffectManager manager = SoundEffectManager.Instance;
                 manager.PlayOneShot(manager.singleAudioSourceList[1], "Collision");
+                GameplayManager controller = GameplayManager.Instance;
                 controller.UpdateGameScore(-1 * controller.socrePunishment);
+
+                if (animator != null)
+                    animator.SetBool("IsDead", isDead);
+
                 SelfDestroy();
             }
         }
@@ -38,12 +43,18 @@ public class Victim : MonoBehaviour
 
     private void SelfDestroy()
     {
-        headRb.useGravity = true;
-        bodyRb.useGravity = true;
-        arm1Rb.useGravity = true;  
-        arm2Rb.useGravity = true;  
-        leg1Rb.useGravity = true;
-        leg2Rb.useGravity = true;
+        if(headRb != null)
+            headRb.useGravity = true;
+        if (bodyRb != null)
+            bodyRb.useGravity = true;
+        if (arm1Rb != null)
+            arm1Rb.useGravity = true;
+        if (arm2Rb != null)
+            arm2Rb.useGravity = true;
+        if (leg1Rb != null)
+            leg1Rb.useGravity = true;
+        if (leg2Rb != null)
+            leg2Rb.useGravity = true;
 
         StartCoroutine(DespawnCoroutine());
     }

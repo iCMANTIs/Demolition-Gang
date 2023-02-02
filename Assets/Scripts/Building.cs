@@ -6,6 +6,8 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
     public GameObject victimPrefab;
+    public GameObject originModel;
+    public GameObject brokenModel;
     public List<Transform> victimPosList = new List<Transform>();
 
     private bool isBroken = false;
@@ -27,6 +29,11 @@ public class Building : MonoBehaviour
                 isBroken = true;
                 GameplayManager controller = GameplayManager.Instance;
                 controller.UpdateGameScore(controller.socreAward);
+
+                originModel.SetActive(!isBroken);
+                brokenModel.SetActive(isBroken);
+
+                StartCoroutine(DespawnCoroutine());
             }
         }
     }
@@ -38,6 +45,12 @@ public class Building : MonoBehaviour
         {
             GameObject victim = ObjectPoolManager.Instance.Spawn(victimPrefab, victimPosList[i].position, Quaternion.identity);
         }
+    }
+
+    IEnumerator DespawnCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(4.0f);
+        ObjectPoolManager.Instance.Despawn(gameObject);
     }
 
 }
