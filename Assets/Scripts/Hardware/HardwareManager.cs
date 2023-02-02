@@ -118,7 +118,7 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
         joystick2 = value;
 
 
-        //Debug.Log($"Hardware stick 2 value {value}");
+        Debug.Log($"Hardware stick 2 value {value}");
     }
 
     //Return true during the frame that the key specified by the parameter is pressed.

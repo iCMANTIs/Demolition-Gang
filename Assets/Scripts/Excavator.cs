@@ -390,21 +390,21 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void HornListener()
     {
-        if (Input.GetKeyUp(KeyCode.Joystick1Button1) || Input.GetKeyUp(KeyCode.Joystick1Button4) ||  
-            Input.GetKeyUp(KeyCode.V))
+        SoundEffectManager manager = SoundEffectManager.Instance;
+        if (Input.GetKeyUp(KeyCode.Joystick1Button0) ||  Input.GetKeyUp(KeyCode.V))
         {
-            SoundEffectManager manager = SoundEffectManager.Instance;
             manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn_Farting");
-
             hornAction.Invoke("horn");
         }
-
-        else if (Input.GetKeyUp(KeyCode.Joystick1Button3) || Input.GetKeyUp(KeyCode.Joystick1Button5) || 
+        else if (Input.GetKeyUp(KeyCode.Joystick1Button1) || Input.GetKeyUp(KeyCode.Joystick1Button3) || 
                  Input.GetKeyUp(KeyCode.B))
         {
-            SoundEffectManager manager = SoundEffectManager.Instance;
             manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn_Truck");
-
+            hornAction.Invoke("horn");
+        }
+        else if (Input.GetKeyUp(KeyCode.Joystick1Button4) || Input.GetKeyUp(KeyCode.Joystick1Button5))
+        {
+            manager.PlayOneShot(manager.singleAudioSourceList[0], "Horn_Song");
             hornAction.Invoke("horn");
         }
     }
@@ -423,7 +423,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
         while (time <= igniteInterval)
         {
-            Debug.Log($"Igniter init: {initialCount}, curr: {HardwareManager.Instance.Joystick2}, time: {time}");
+            //Debug.Log($"Igniter init: {initialCount}, curr: {HardwareManager.Instance.Joystick2}, time: {time}");
 
 
             if (Math.Abs(HardwareManager.Instance.Joystick2 - initialCount) >= igniteThreshold)
