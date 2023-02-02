@@ -195,6 +195,8 @@ MonoBehaviour:
   boom: {fileID: 6080465137297327260}
   arm: {fileID: 3163091648720398452}
   bucket: {fileID: 4535489666664587705}
+  rightTrackAnimator: {fileID: 6140256684243384382}
+  leftTrackAnimator: {fileID: 8778790985401660267}
   isDebugMode: 0
 --- !u!54 &437388728629368869
 Rigidbody:

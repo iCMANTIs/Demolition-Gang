@@ -34,6 +34,8 @@ public class Excavator : DestroyableSingleton<Excavator>
     public GameObject boom;
     public GameObject arm;
     public GameObject bucket;
+    public Animator rightTrackAnimator;
+    public Animator leftTrackAnimator;
 
 
     public bool isDebugMode = false;
@@ -198,6 +200,8 @@ public class Excavator : DestroyableSingleton<Excavator>
                     manager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
             }
 
+            rightTrackAnimator.SetFloat("Speed", speed);
+            leftTrackAnimator.SetFloat("Speed", speed);
 
             Vector3 direction = transform.right;
             speed = speed * (int)gearState * speedDamp * Time.deltaTime;
