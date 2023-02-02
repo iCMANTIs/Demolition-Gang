@@ -12,6 +12,7 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     public TextMeshProUGUI bonusText;
     public TextMeshProUGUI alertText;
     public TextMeshProUGUI alertStateText;
+    public TextMeshProUGUI trackTimerText;
 
     public RectTransform alertIndicator;
 
