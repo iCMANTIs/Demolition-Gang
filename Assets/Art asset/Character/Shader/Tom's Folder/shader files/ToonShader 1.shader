@@ -7,6 +7,7 @@ Shader "Unlit/ToonShader"
         _Strength("Strength", Range(0,1)) = 0.5
         _Color("Color", COLOR) = (1, 1, 1, 1)
         _Detail("Detail", Range(0, 1)) = 0.3
+        _BumpMap ("Bumpmap", 2D) = "bump" {}
     }
     SubShader
     {
@@ -16,11 +17,12 @@ Shader "Unlit/ToonShader"
         Pass
         {
             CGPROGRAM
+
+
             #pragma vertex vert
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -41,6 +43,7 @@ Shader "Unlit/ToonShader"
             float _Strength;
             float4 _Color;
             float _Detail;
+            sampler2D _BumpMap;
 
 
             float Toon(float3 normal, float3 lightDir)
