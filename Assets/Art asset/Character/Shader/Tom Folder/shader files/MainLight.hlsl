@@ -1,34 +1,36 @@
-void MainLight_float(float3 WorldPos, out half3 Direction, out half3 Color, out half DistanceAtten, out half ShadowAtten)
+void MainLight_float(float3 WorldPos, out float3 Direction, out float3 Color, out float DistanceAtten, out float ShadowAtten)
 {
-    #if SHADERGRAPH_PREVIEW
-        Direction = half3(0.5, 0.5, 0);
-        Color = 1;
-        DistanceAtten = 1;
-        ShadowAtten = 1;
+        #ifdef SHADERGRAPH_PREVIEW
+        Direction = normalize(float3(0.5f, 0.5f, 0.25f));
+        Color = float3(1.0f, 1.0f, 1.0f);
+        DistanceAtten = 1.0f;
+        ShadowAtten = 1.0f;
     #else
-        #if SHADOWS_SCREEN
-            half4 clipPos = TransformWorldToHClip(WorldPos);
-            half4 shadowCoord = ComputeScreenPos(clipPos);
-        #else
-            half4 shadowCoord = TransformWorldToShadowCoord(WorldPos);
-        #endif
-            Light mainLight = GetMainLight(shadowCoord);
-            Direction = mainLight.direction;
-            Color = mainLight.color;
-            DistanceAtten = mainLight.distanceAttenuation;
+        float4 shadowCoord = TransformWorldToShadowCoord(WorldPos);
+        Light mainLight = GetMainLight(shadowCoord);
+    
+        Direction = mainLight.direction;
+        Color = mainLight.color;
+        DistanceAtten = mainLight.distanceAttenuation;
+        ShadowAtten = mainLight.shadowAttenuation;
+    #endif
+    }
 
-        #if !defined(_MAIN_LIGHT_SHADOWS) || defined(_RECEIVE_SHADOWS_OFF)
-            ShadowAtten = 1.0h;
-        #endif
-
-        #if SHADOWS_SCREEN
-            ShadowAtten = SampleScreenSpaceShadowmap(shadowCoord);
-        #else
-            ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();
-            half shadowStrength = GetMainLightShadowStrength();
-            ShadowAtten = SampleShadowmap(shadowCoord, TEXTURE2D_ARGS(_MainLightShadowmapTexture,
-            sampler_MainLightShadowmapTexture),
-            shadowSamplingData, shadowStrength, false);
-        #endif
+    void MainLight_half(half3 WorldPos, out half3 Direction, out half3 Color, 
+        out half DistanceAtten, out half ShadowAtten)
+    {
+    #ifdef SHADERGRAPH_PREVIEW
+        Direction = normalize(half3(0.5f, 0.5f, 0.25f));
+        Color = half3(1.0f, 1.0f, 1.0f);
+        DistanceAtten = 1.0f;
+        ShadowAtten = 1.0f;
+    #else
+        half4 shadowCoord = TransformWorldToShadowCoord(WorldPos);
+        Light mainLight = GetMainLight(shadowCoord);
+    
+        Direction = mainLight.direction;
+        Color = mainLight.color;
+        DistanceAtten = mainLight.distanceAttenuation;
+        ShadowAtten = mainLight.shadowAttenuation;
     #endif
 }
