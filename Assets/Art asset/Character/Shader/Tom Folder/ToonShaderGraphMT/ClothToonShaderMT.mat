@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6236021702010657515
+--- !u!114 &-895127283078152640
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FaceToonMT 1
+  m_Name: ClothToonShaderMT
   m_Shader: {fileID: -6465566751694194690, guid: edc10a4d37b74f248ab0c0e8ae0300bd,
     type: 3}
   m_ValidKeywords: []
@@ -59,7 +59,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: dac064010535aa440984ffc937502d4d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 530d2cbb791398f4dbb4fa45c85b87f5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -104,8 +104,8 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
-    - _Falloff_Amount: 0.1
-    - _Fresnel_Size: 0.1
+    - _Falloff_Amount: 0.05
+    - _Fresnel_Size: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -130,5 +130,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Fresnel_Color: {r: 1, g: 1, b: 1, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _Specular_Color: {r: 0.16981131, g: 0.16981131, b: 0.16981131, a: 0}
+    - _Specular_Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
