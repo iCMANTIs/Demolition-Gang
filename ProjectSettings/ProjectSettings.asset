@@ -793,7 +793,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    Standalone: UDUINO_READY;UDUINO_MEGA_MESSAGE
+    Standalone: UDUINO_READY;UDUINO_MEGA_MESSAGE;UNITY_PIPELINE_URP
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
