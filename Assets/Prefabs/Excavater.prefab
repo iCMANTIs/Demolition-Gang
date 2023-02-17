@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e4d1ef8e2c2cc4d8d07a8cb6826ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedRate: 15
   speedDamp: 0.2
   boomUpperBound: 30
   boomLowerBound: 335
@@ -198,6 +199,7 @@ MonoBehaviour:
   rightTrackAnimator: {fileID: 6140256684243384382}
   leftTrackAnimator: {fileID: 8778790985401660267}
   isDebugMode: 0
+  useKeyBoard: 0
 --- !u!54 &437388728629368869
 Rigidbody:
   m_ObjectHideFlags: 0

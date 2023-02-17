@@ -5109,6 +5109,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9046165717573535503, guid: 85e264e12d2ad9649ae043e4ba51207a,
         type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
+    - target: {fileID: 9046165717573535503, guid: 85e264e12d2ad9649ae043e4ba51207a,
+        type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 8
       objectReference: {fileID: 0}
@@ -13366,7 +13371,12 @@ PrefabInstance:
     - target: {fileID: 6250733383562223450, guid: 8df717397d617744696728f985a00563,
         type: 3}
       propertyPath: isDebugMode
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6250733383562223450, guid: 8df717397d617744696728f985a00563,
+        type: 3}
+      propertyPath: useKeyBoard
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8632911253076188726, guid: 8df717397d617744696728f985a00563,
         type: 3}

@@ -7,6 +7,7 @@ using SoundEffect;
 public class Excavator : DestroyableSingleton<Excavator>
 {
     [Header("Speed")]
+    public int speedRate = 15;
     public float speedDamp = 0.10f;
 
     [Header("Mechanical Arm")]
@@ -26,7 +27,6 @@ public class Excavator : DestroyableSingleton<Excavator>
     public int RPMUpperBound = 0;
     public int RPMLowerBound = 0;
 
-
     [Header("GameObject")]
     public Camera cameraTPS;
     public Camera cameraFPS;
@@ -37,8 +37,9 @@ public class Excavator : DestroyableSingleton<Excavator>
     public Animator rightTrackAnimator;
     public Animator leftTrackAnimator;
 
-
+    [Header("Debug")]
     public bool isDebugMode = false;
+    public bool useKeyBoard = false;
 
     private bool isBucketRotating = false;
     private int engineRPM = 0;
@@ -48,14 +49,16 @@ public class Excavator : DestroyableSingleton<Excavator>
     public Action<string> hornAction;
 
 
+
+
     private string[] stickNames = 
     {
-        "LeftJoyStickS1",
-        "LeftJoyStickS2",
-        "LeftJoyStickS3",
-        "RightJoyStickS1",
-        "RightJoyStickS2",
-        "RightJoyStickS3",
+        "LeftJoyStickS1",           // left first stick, control the left track
+        "LeftJoyStickS2",           // left second  stick, control the cab rotation
+        "LeftJoyStickS3",           // left third stick, control the boom rotation
+        "RightJoyStickS1",          // right first stick, control the right track
+        "RightJoyStickS2",          // right second stick, control the arm rotation
+        "RightJoyStickS3",          // right third stick, control the gear shifting
     };
 
     enum StickState { ACCELERATE = 30, FORWARD = 15, IDLE = 0, BACKWARD = -15, DECELERATE = -30 }
@@ -83,7 +86,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
         HardwareManager.Instance.OnStick2ChangeAction += IgniteListener;
 
-        InitExcavator();
+        InitExcavator();        
     }
 
 
@@ -91,13 +94,17 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         base.Update();
 
-        UpdateJoyStickState(ref leftStick1, stickNames[0]);
-        UpdateJoyStickState(ref leftStick2, stickNames[1]);
-        UpdateJoyStickState(ref leftStick3, stickNames[2]);
-        UpdateJoyStickState(ref rightStick1, stickNames[3]);
-        UpdateJoyStickState(ref rightStick2, stickNames[4]);
-        UpdateJoyStickState(ref rightStick3, stickNames[5]);
-        
+        if (!useKeyBoard)
+        {
+            UpdateJoyStickState(ref leftStick1, stickNames[0]);
+            UpdateJoyStickState(ref leftStick2, stickNames[1]);
+            UpdateJoyStickState(ref leftStick3, stickNames[2]);
+            UpdateJoyStickState(ref rightStick1, stickNames[3]);
+            UpdateJoyStickState(ref rightStick2, stickNames[4]);
+            UpdateJoyStickState(ref rightStick3, stickNames[5]);
+        }
+        else
+            UpdateJoyStickState();
         
         if (GameplayManager.Instance.gameState == GameplayManager.GameState.STARTED)
         {
@@ -137,13 +144,13 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         float value;
 
-        if (stickName == stickNames[5] && !isDebugMode)
+        /* Right joystick 3 use the input from external hardware */
+        if (stickName == stickNames[5])
             value = HardwareManager.Instance.Joystick1;
         else
             value = Input.GetAxis(stickName);
 
         //Debug.Log($"Stick {stickName} value {value}");
-
         if (value <= 1 && value > 0.6)
             stick = StickState.ACCELERATE;
         else if (value <= 0.6 && value > 0.2)
@@ -157,31 +164,90 @@ public class Excavator : DestroyableSingleton<Excavator>
     }
 
 
+    private void UpdateJoyStickState()
+    {
+        if(Input.GetKeyUp(KeyCode.Q))
+            leftStick1 = leftStick1 == StickState.ACCELERATE ? StickState.ACCELERATE : leftStick1 + speedRate;
+        if (Input.GetKeyUp(KeyCode.W))
+            leftStick1 = leftStick1 == StickState.DECELERATE ? StickState.DECELERATE : leftStick1 - speedRate;
+
+        if (Input.GetKeyUp(KeyCode.E))
+            leftStick2 = leftStick2 == StickState.ACCELERATE ? StickState.ACCELERATE : leftStick2 + speedRate;
+        if (Input.GetKeyUp(KeyCode.R))
+            leftStick2 = leftStick2 == StickState.DECELERATE ? StickState.DECELERATE : leftStick2 - speedRate;
+
+        if (Input.GetKeyUp(KeyCode.T))
+            leftStick3 = leftStick3 == StickState.ACCELERATE ? StickState.ACCELERATE : leftStick3 + speedRate;
+        if (Input.GetKeyUp(KeyCode.Y))
+            leftStick3 = leftStick3 == StickState.DECELERATE ? StickState.DECELERATE : leftStick3 - speedRate;
+
+        if (Input.GetKeyUp(KeyCode.A))
+            rightStick1 = rightStick1 == StickState.ACCELERATE ? StickState.ACCELERATE : rightStick1 + speedRate;
+        if (Input.GetKeyUp(KeyCode.S))
+            rightStick1 = rightStick1 == StickState.DECELERATE ? StickState.DECELERATE : rightStick1 - speedRate;
+
+        if (Input.GetKeyUp(KeyCode.D))
+            rightStick2 = rightStick2 == StickState.ACCELERATE ? StickState.ACCELERATE : rightStick2 + speedRate;
+        if (Input.GetKeyUp(KeyCode.F))
+            rightStick2 = rightStick2 == StickState.DECELERATE ? StickState.DECELERATE : rightStick2 - speedRate;
+
+        if (Input.GetKeyUp(KeyCode.G))
+            rightStick3 = rightStick3 == StickState.ACCELERATE ? StickState.ACCELERATE : rightStick3 + speedRate;
+        if (Input.GetKeyUp(KeyCode.H))
+            rightStick3 = rightStick3 == StickState.DECELERATE ? StickState.DECELERATE : rightStick3 - speedRate;
+    }
+
+
     private void UpdateExcavatorMovement()
     {
         if (engineState == EngineState.ON)
         {
-            float speed;
-            switch (leftStick1)
-            {
-                case StickState.DECELERATE:
-                    speed = 0.0f;
-                    break;
-                case StickState.BACKWARD:
-                case StickState.IDLE:
-                    speed = 15.0f;
-                    break;
-                case StickState.FORWARD:
-                case StickState.ACCELERATE:
-                    speed = 30.0f;
-                    break;
-                default:
-                    speed = 0.0f;
-                    break;
-            }
+            float leftSpeed, rightSpeed, speed;
 
+            /* First control plan: two joystick control two vehicle tracks respectively */
+            if (leftStick1 == StickState.DECELERATE)
+                leftSpeed = 0.0f;
+            else if (leftStick1 == StickState.BACKWARD || leftStick1 == StickState.IDLE)
+                leftSpeed = speedRate * 1;
+            else
+                leftSpeed = speedRate * 2;
+
+            if (rightStick1 == StickState.DECELERATE)
+                rightSpeed = 0.0f;
+            else if (rightStick1 == StickState.BACKWARD || rightStick1 == StickState.IDLE)
+                rightSpeed = speedRate * 1;
+            else
+                rightSpeed = speedRate * 2;
+
+            speed = Mathf.Min(leftSpeed, rightSpeed);
+
+            ///* Second control plan: one joystick control forward movement, another control rotation */
+            //switch (leftStick1)
+            //{
+            //    case StickState.DECELERATE:
+            //        speed = 0.0f;
+            //        break;
+            //    case StickState.BACKWARD:
+            //    case StickState.IDLE:
+            //        speed = speedRate * 1;
+            //        break;
+            //    case StickState.FORWARD:
+            //    case StickState.ACCELERATE:
+            //        speed = speedRate * 2;
+            //        break;
+            //    default:
+            //        speed = 0.0f;
+            //        break;
+            //}
+
+            Vector3 direction = transform.right;
+            speed = speed * (int)gearState * speedDamp * Time.deltaTime;
+            transform.Translate(direction * speed, Space.World);
+
+
+            /* Play sound effect */
             SoundEffectManager manager = SoundEffectManager.Instance;
-            if ((leftStick1 == StickState.DECELERATE && rightStick1 == StickState.IDLE) ||
+            if ((leftStick1 == StickState.DECELERATE && rightStick1 == StickState.DECELERATE) ||
                 gearState == GearState.NEUTRAL)
             {
                 if (engineAccelSource != null)
@@ -200,12 +266,9 @@ public class Excavator : DestroyableSingleton<Excavator>
                     manager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
             }
 
+            /* Play model animation */
             rightTrackAnimator.SetFloat("Speed", speed);
             leftTrackAnimator.SetFloat("Speed", speed);
-
-            Vector3 direction = transform.right;
-            speed = speed * (int)gearState * speedDamp * Time.deltaTime;
-            transform.Translate(direction * speed, Space.World);
         }
     }
 
@@ -214,29 +277,37 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         if (engineState == EngineState.ON)
         {
-            SoundEffectManager manager = SoundEffectManager.Instance;
-            if ((leftStick1 == StickState.DECELERATE && rightStick1 == StickState.IDLE) ||
-                gearState == GearState.NEUTRAL)
-            {
-                if (engineAccelSource != null)
-                {
-                    manager.Stop(engineAccelSource);
-                    engineAccelSource = null;
-                }
-            }
-            else
-            {
-                if (engineAccelSource == null)
-                    engineAccelSource = manager.FindAvailableLoopAudioSource();
-
-                if (engineAccelSource != null &&
-                    engineAccelSource.isPlaying == false)
-                    manager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
-            }
-
+            float angularSpeed;
             Vector3 axis = transform.up;
-            float angularSpeed = -1 * (int)rightStick1 * (int)gearState * Time.deltaTime;
+
+            /* First control plan: two joystick control two vehicle tracks respectively */
+            angularSpeed = ((int)leftStick1 - (int)rightStick1) * (int)gearState * Time.deltaTime;
+
+            ///* Second control plan: one joystick control forward movement, another control rotation */
+            //angularSpeed = -1 * (int)rightStick1 * (int)gearState * Time.deltaTime;
+
             transform.Rotate(axis, angularSpeed, Space.World);
+
+            ///* Play sound effect */
+            //SoundEffectManager manager = SoundEffectManager.Instance;
+            //if ((leftStick1 == StickState.DECELERATE && rightStick1 == StickState.IDLE) ||
+            //    gearState == GearState.NEUTRAL)
+            //{
+            //    if (engineAccelSource != null)
+            //    {
+            //        manager.Stop(engineAccelSource);
+            //        engineAccelSource = null;
+            //    }
+            //}
+            //else
+            //{
+            //    if (engineAccelSource == null)
+            //        engineAccelSource = manager.FindAvailableLoopAudioSource();
+
+            //    if (engineAccelSource != null &&
+            //        engineAccelSource.isPlaying == false)
+            //        manager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
+            //}
         }
     }
 
