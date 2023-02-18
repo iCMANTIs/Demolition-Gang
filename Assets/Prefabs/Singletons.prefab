@@ -99,11 +99,25 @@ MonoBehaviour:
     upperBound: 0.6
   - lowerBound: 0.6
     upperBound: 1
+  sticks:
+  - stickName: LeftJoyStickS1
+    stickState: 0
+  - stickName: LeftJoyStickS2
+    stickState: 0
+  - stickName: LeftJoyStickS3
+    stickState: 0
+  - stickName: RightJoyStickS1
+    stickState: 0
+  - stickName: RightJoyStickS2
+    stickState: 0
+  - stickName: RightJoyStickS3
+    stickState: 0
   frameRate: 60
   totalGameTime: 90
   scoreFactor: 100
   socrePunishment: 500
   socreAward: 2000
+  useKeyBoard: 0
   gameState: 0
 --- !u!1 &2102523020080483962
 GameObject:

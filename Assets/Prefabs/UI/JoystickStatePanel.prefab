@@ -542,7 +542,7 @@ MonoBehaviour:
     levelIndex: 2
     stickIndicator: {fileID: 578997404448716180}
   - stickID: RightJoyStickS1
-    levelIndex: 2
+    levelIndex: 0
     stickIndicator: {fileID: 8964183388716469639}
   - stickID: RightJoyStickS2
     levelIndex: 2

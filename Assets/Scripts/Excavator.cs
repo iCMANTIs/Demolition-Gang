@@ -7,10 +7,11 @@ using SoundEffect;
 public class Excavator : DestroyableSingleton<Excavator>
 {
     [Header("Speed")]
-    public int speedRate = 15;
+    public float speedRate = 15f;
     public float speedDamp = 0.10f;
 
     [Header("Mechanical Arm")]
+    public float angualrSpeedRate = 15f;
     public float boomUpperBound = 0.0f;
     public float boomLowerBound = 0.0f;
     public float armUpperBound = 0.0f;
@@ -49,26 +50,6 @@ public class Excavator : DestroyableSingleton<Excavator>
     public Action<string> hornAction;
 
 
-
-
-    private string[] stickNames = 
-    {
-        "LeftJoyStickS1",           // left first stick, control the left track
-        "LeftJoyStickS2",           // left second  stick, control the cab rotation
-        "LeftJoyStickS3",           // left third stick, control the boom rotation
-        "RightJoyStickS1",          // right first stick, control the right track
-        "RightJoyStickS2",          // right second stick, control the arm rotation
-        "RightJoyStickS3",          // right third stick, control the gear shifting
-    };
-
-    enum StickState { ACCELERATE = 30, FORWARD = 15, IDLE = 0, BACKWARD = -15, DECELERATE = -30 }
-    StickState leftStick1 = StickState.IDLE;
-    StickState leftStick2 = StickState.IDLE;
-    StickState leftStick3 = StickState.IDLE;
-    StickState rightStick1 = StickState.IDLE;
-    StickState rightStick2 = StickState.IDLE;
-    StickState rightStick3 = StickState.IDLE;
-
     public enum EngineState { ON = 1, IGNITE = 0, OFF = -1}
     private EngineState engineState = EngineState.OFF;
     public EngineState ExcavatorEngineState { get { return engineState; } }
@@ -94,17 +75,6 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         base.Update();
 
-        if (!useKeyBoard)
-        {
-            UpdateJoyStickState(ref leftStick1, stickNames[0]);
-            UpdateJoyStickState(ref leftStick2, stickNames[1]);
-            UpdateJoyStickState(ref leftStick3, stickNames[2]);
-            UpdateJoyStickState(ref rightStick1, stickNames[3]);
-            UpdateJoyStickState(ref rightStick2, stickNames[4]);
-            UpdateJoyStickState(ref rightStick3, stickNames[5]);
-        }
-        else
-            UpdateJoyStickState();
         
         if (GameplayManager.Instance.gameState == GameplayManager.GameState.STARTED)
         {
@@ -140,81 +110,27 @@ public class Excavator : DestroyableSingleton<Excavator>
     }
 
 
-    private void UpdateJoyStickState(ref StickState stick, string stickName)
-    {
-        float value;
-
-        /* Right joystick 3 use the input from external hardware */
-        if (stickName == stickNames[5])
-            value = HardwareManager.Instance.Joystick1;
-        else
-            value = Input.GetAxis(stickName);
-
-        //Debug.Log($"Stick {stickName} value {value}");
-        if (value <= 1 && value > 0.6)
-            stick = StickState.ACCELERATE;
-        else if (value <= 0.6 && value > 0.2)
-            stick = StickState.FORWARD;
-        else if (value <= 0.2 && value > -0.2)
-            stick = StickState.IDLE;
-        else if (value <= -0.2 && value > -0.6)
-            stick = StickState.BACKWARD;
-        else if (value <= -0.6 && value >= -1)
-            stick = StickState.DECELERATE;
-    }
-
-
-    private void UpdateJoyStickState()
-    {
-        if(Input.GetKeyUp(KeyCode.Q))
-            leftStick1 = leftStick1 == StickState.ACCELERATE ? StickState.ACCELERATE : leftStick1 + speedRate;
-        if (Input.GetKeyUp(KeyCode.W))
-            leftStick1 = leftStick1 == StickState.DECELERATE ? StickState.DECELERATE : leftStick1 - speedRate;
-
-        if (Input.GetKeyUp(KeyCode.E))
-            leftStick2 = leftStick2 == StickState.ACCELERATE ? StickState.ACCELERATE : leftStick2 + speedRate;
-        if (Input.GetKeyUp(KeyCode.R))
-            leftStick2 = leftStick2 == StickState.DECELERATE ? StickState.DECELERATE : leftStick2 - speedRate;
-
-        if (Input.GetKeyUp(KeyCode.T))
-            leftStick3 = leftStick3 == StickState.ACCELERATE ? StickState.ACCELERATE : leftStick3 + speedRate;
-        if (Input.GetKeyUp(KeyCode.Y))
-            leftStick3 = leftStick3 == StickState.DECELERATE ? StickState.DECELERATE : leftStick3 - speedRate;
-
-        if (Input.GetKeyUp(KeyCode.A))
-            rightStick1 = rightStick1 == StickState.ACCELERATE ? StickState.ACCELERATE : rightStick1 + speedRate;
-        if (Input.GetKeyUp(KeyCode.S))
-            rightStick1 = rightStick1 == StickState.DECELERATE ? StickState.DECELERATE : rightStick1 - speedRate;
-
-        if (Input.GetKeyUp(KeyCode.D))
-            rightStick2 = rightStick2 == StickState.ACCELERATE ? StickState.ACCELERATE : rightStick2 + speedRate;
-        if (Input.GetKeyUp(KeyCode.F))
-            rightStick2 = rightStick2 == StickState.DECELERATE ? StickState.DECELERATE : rightStick2 - speedRate;
-
-        if (Input.GetKeyUp(KeyCode.G))
-            rightStick3 = rightStick3 == StickState.ACCELERATE ? StickState.ACCELERATE : rightStick3 + speedRate;
-        if (Input.GetKeyUp(KeyCode.H))
-            rightStick3 = rightStick3 == StickState.DECELERATE ? StickState.DECELERATE : rightStick3 - speedRate;
-    }
-
-
     private void UpdateExcavatorMovement()
     {
         if (engineState == EngineState.ON)
         {
             float leftSpeed, rightSpeed, speed;
+            GameplayManager.JoySitckConfig leftStick = GameplayManager.Instance.sticks[0];
+            GameplayManager.JoySitckConfig rightStick = GameplayManager.Instance.sticks[3];
 
             /* First control plan: two joystick control two vehicle tracks respectively */
-            if (leftStick1 == StickState.DECELERATE)
+            if (leftStick.stickState == GameplayManager.StickState.DECELERATE)
                 leftSpeed = 0.0f;
-            else if (leftStick1 == StickState.BACKWARD || leftStick1 == StickState.IDLE)
+            else if (leftStick.stickState == GameplayManager.StickState.BACKWARD || 
+                     leftStick.stickState == GameplayManager.StickState.IDLE)
                 leftSpeed = speedRate * 1;
             else
                 leftSpeed = speedRate * 2;
 
-            if (rightStick1 == StickState.DECELERATE)
+            if (rightStick.stickState == GameplayManager.StickState.DECELERATE)
                 rightSpeed = 0.0f;
-            else if (rightStick1 == StickState.BACKWARD || rightStick1 == StickState.IDLE)
+            else if (rightStick.stickState == GameplayManager.StickState.BACKWARD || 
+                     rightStick.stickState == GameplayManager.StickState.IDLE)
                 rightSpeed = speedRate * 1;
             else
                 rightSpeed = speedRate * 2;
@@ -222,17 +138,17 @@ public class Excavator : DestroyableSingleton<Excavator>
             speed = Mathf.Min(leftSpeed, rightSpeed);
 
             ///* Second control plan: one joystick control forward movement, another control rotation */
-            //switch (leftStick1)
+            //switch (leftStick.stickState)
             //{
-            //    case StickState.DECELERATE:
+            //    case GameplayManager.StickState.DECELERATE:
             //        speed = 0.0f;
             //        break;
-            //    case StickState.BACKWARD:
-            //    case StickState.IDLE:
+            //    case GameplayManager.StickState.BACKWARD:
+            //    case GameplayManager.StickState.IDLE:
             //        speed = speedRate * 1;
             //        break;
-            //    case StickState.FORWARD:
-            //    case StickState.ACCELERATE:
+            //    case GameplayManager.StickState.FORWARD:
+            //    case GameplayManager.StickState.ACCELERATE:
             //        speed = speedRate * 2;
             //        break;
             //    default:
@@ -246,24 +162,25 @@ public class Excavator : DestroyableSingleton<Excavator>
 
 
             /* Play sound effect */
-            SoundEffectManager manager = SoundEffectManager.Instance;
-            if ((leftStick1 == StickState.DECELERATE && rightStick1 == StickState.DECELERATE) ||
+            SoundEffectManager soundManager = SoundEffectManager.Instance;
+            if ((leftStick.stickState == GameplayManager.StickState.DECELERATE && 
+                 rightStick.stickState == GameplayManager.StickState.DECELERATE) ||
                 gearState == GearState.NEUTRAL)
             {
                 if (engineAccelSource != null)
                 {
-                    manager.Stop(engineAccelSource);
+                    soundManager.Stop(engineAccelSource);
                     engineAccelSource = null;
                 }
             }
             else
             {
                 if (engineAccelSource == null)
-                    engineAccelSource = manager.FindAvailableLoopAudioSource();
+                    engineAccelSource = soundManager.FindAvailableLoopAudioSource();
 
                 if (engineAccelSource != null && 
                     engineAccelSource.isPlaying == false)
-                    manager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
+                    soundManager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
             }
 
             /* Play model animation */
@@ -279,12 +196,14 @@ public class Excavator : DestroyableSingleton<Excavator>
         {
             float angularSpeed;
             Vector3 axis = transform.up;
+            GameplayManager.JoySitckConfig leftStick = GameplayManager.Instance.sticks[0];
+            GameplayManager.JoySitckConfig rightStick = GameplayManager.Instance.sticks[3];
 
             /* First control plan: two joystick control two vehicle tracks respectively */
-            angularSpeed = ((int)leftStick1 - (int)rightStick1) * (int)gearState * Time.deltaTime;
+            angularSpeed = ((int)leftStick.stickState - (int)rightStick.stickState) * (int)gearState * angualrSpeedRate * Time.deltaTime;
 
             ///* Second control plan: one joystick control forward movement, another control rotation */
-            //angularSpeed = -1 * (int)rightStick1 * (int)gearState * Time.deltaTime;
+            //angularSpeed = -1 * (int)rightStick.stickState * (int)gearState * angualrSpeedRate * Time.deltaTime;
 
             transform.Rotate(axis, angularSpeed, Space.World);
 
@@ -316,7 +235,8 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         if (engineState == EngineState.ON)
         {
-            float angularSpeed = (int)leftStick2 * Time.deltaTime;
+            GameplayManager.JoySitckConfig stick = GameplayManager.Instance.sticks[1];
+            float angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
             Vector3 axis = cab.transform.up; 
             cab.transform.Rotate(axis, angularSpeed, Space.World);
         }
@@ -327,7 +247,8 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         if (engineState == EngineState.ON)
         {
-            float angularSpeed = (int)leftStick3 * Time.deltaTime;
+            GameplayManager.JoySitckConfig stick = GameplayManager.Instance.sticks[2];
+            float angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
             Vector3 axis = boom.transform.forward;
             boom.transform.Rotate(axis, angularSpeed, Space.World);
         }
@@ -349,7 +270,8 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         if (engineState == EngineState.ON)
         {
-            float angularSpeed = (int)rightStick2 * Time.deltaTime;
+            GameplayManager.JoySitckConfig stick = GameplayManager.Instance.sticks[4];
+            float angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
             Vector3 axis = arm.transform.forward;
             arm.transform.Rotate(axis, angularSpeed, Space.World);
         }
@@ -370,19 +292,20 @@ public class Excavator : DestroyableSingleton<Excavator>
         if (engineState == EngineState.ON)
         {
             GearState currentState;
-            switch (rightStick3)
+            GameplayManager.JoySitckConfig stick = GameplayManager.Instance.sticks[5];
+            switch (stick.stickState)
             {
-                case StickState.ACCELERATE:
+                case GameplayManager.StickState.ACCELERATE:
                     currentState = GearState.SECOND;
                     break;
-                case StickState.FORWARD:
+                case GameplayManager.StickState.FORWARD:
                     currentState = GearState.FIRST;
                     break;
-                case StickState.IDLE:
+                case GameplayManager.StickState.IDLE:
                     currentState = GearState.NEUTRAL;
                     break;
-                case StickState.BACKWARD:
-                case StickState.DECELERATE:
+                case GameplayManager.StickState.BACKWARD:
+                case GameplayManager.StickState.DECELERATE:
                     currentState = GearState.REVERSE;
                     break;
                 default:
@@ -422,7 +345,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
         if (engineState == EngineState.ON)
         {
-            float stickValue = Input.GetAxis(stickNames[0]) + 1.0f;
+            float stickValue = Input.GetAxis(GameplayManager.Instance.sticks[0].stickName) + 1.0f;
             engineRPM += Mathf.FloorToInt(stickValue * RPMSpeed * Time.deltaTime);
         }
 
@@ -557,31 +480,15 @@ public class Excavator : DestroyableSingleton<Excavator>
 
 
 
-
-
-
-
-
-    private void UpdateMovementTemp()
-    {
-        float speed = 15f * Input.GetAxis("Vertical") * Time.deltaTime;
-
-        transform.Translate(transform.right * speed, Space.World);
-
-        float angularSpeed = 30f * Input.GetAxis("Horizontal") * Time.deltaTime;
-
-        transform.Rotate(transform.up, angularSpeed, Space.World);
-    }
-
-
    
 
 
     // Show some data 
     void OnGUI()
     {
-        GUI.TextArea(new Rect(0, 50, 250, 40), $"Left stick : {leftStick1} : {leftStick2} : {leftStick3}");
-        GUI.TextArea(new Rect(0, 100, 250, 40), $"Right stick : {rightStick1} : {rightStick2} : {rightStick3}");
+        List<GameplayManager.JoySitckConfig> sticks = GameplayManager.Instance.sticks;
+        GUI.TextArea(new Rect(0, 50, 250, 40), $"Left stick : {sticks[0].stickState} : {sticks[1].stickState} : {sticks[2].stickState}");
+        GUI.TextArea(new Rect(0, 100, 250, 40), $"Right stick : {sticks[3].stickState} : {sticks[4].stickState} : {sticks[5].stickState}");
         GUI.TextArea(new Rect(0, 150, 250, 40), $"Engine State : {engineState}");
         GUI.TextArea(new Rect(0, 200, 250, 40), $"Gear State : {gearState}");
         GUI.TextArea(new Rect(0, 250, 250, 40), $"Engine RPM : {engineRPM}");

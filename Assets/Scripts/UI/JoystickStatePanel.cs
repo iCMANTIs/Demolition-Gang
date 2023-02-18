@@ -99,10 +99,20 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
         {
             float stickScale = 2.0f; // The value of the joystick goes from -1 to 1;
             float stickValue;
-            if (config.stickID != stickIndicators[5].stickID)
-                stickValue = Input.GetAxis(config.stickID);
+
+            if (GameplayManager.Instance.useKeyBoard == false)
+            {
+                if (config.stickID != stickIndicators[5].stickID)
+                    stickValue = Input.GetAxis(config.stickID);
+                else
+                    stickValue = HardwareManager.Instance.Joystick1;
+            }
             else
-                stickValue = HardwareManager.Instance.Joystick1;
+            {
+                GameplayManager.JoySitckConfig stick = GameplayManager.Instance.sticks.Find(stick => stick.stickName == config.stickID);
+                stickValue = (int)stick.stickState / 2.0f;
+            }
+
             var stickLevel = GameplayManager.Instance.stickLevels[config.levelIndex];
             Slider slider = config.stickIndicator.GetChild(0).GetComponent<Slider>();
 
@@ -115,7 +125,7 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
             GameObject greenBackground = slider.transform.Find("Handle Slide Area/Handle/Label/GreenBackground").gameObject;
             GameObject redBackground = slider.transform.Find("Handle Slide Area/Handle/Label/RedBackground").gameObject;
 
-            bool isReady = (stickValue <= stickLevel.upperBound && stickValue > stickLevel.lowerBound);
+            bool isReady = (stickValue <= stickLevel.upperBound && stickValue >= stickLevel.lowerBound);
             labelText.text = isReady ? $"Ready" : $"Unset";
             greenBackground.SetActive(isReady);
             redBackground.SetActive(!isReady);

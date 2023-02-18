@@ -6323,6 +6323,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 400471497053904173, guid: e5dd9da8ff61fa44c959bb414a7082ee,
+        type: 3}
+      propertyPath: useKeyBoard
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4449397903789646353, guid: e5dd9da8ff61fa44c959bb414a7082ee,
         type: 3}
       propertyPath: m_RootOrder
