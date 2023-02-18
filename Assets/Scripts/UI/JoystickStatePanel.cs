@@ -23,6 +23,7 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
     public Button closeButton;
 
 
+    private GameplayManager gameManager;
     private bool isReadyToStart = false;
 
 
@@ -39,6 +40,8 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
     {
         base.Start();
 
+        gameManager = GameplayManager.Instance;
+
         InitStickIndicator();
     }
 
@@ -54,8 +57,8 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
 
     public void Show()
     {
-        startButton.gameObject.SetActive(GameplayManager.Instance.gameState == GameplayManager.GameState.UNSTARTED);
-        closeButton.gameObject.SetActive(GameplayManager.Instance.gameState != GameplayManager.GameState.UNSTARTED);
+        startButton.gameObject.SetActive(gameManager.gameState == GameplayManager.GameState.UNSTARTED);
+        closeButton.gameObject.SetActive(gameManager.gameState != GameplayManager.GameState.UNSTARTED);
         gameObject.SetActive(true);
     }
 
@@ -71,7 +74,7 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
         foreach (StickIndicatorConfig config in stickIndicators)
         {
             float stickScale = 2.0f; // The value of the joystick goes from -1 to 1;
-            var stickLevel = GameplayManager.Instance.stickLevels[config.levelIndex];
+            var stickLevel = gameManager.stickLevels[config.levelIndex];
             RectTransform target = config.stickIndicator.GetChild(1).GetComponent<RectTransform>();
 
             /* Update target area starting position */
@@ -100,7 +103,7 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
             float stickScale = 2.0f; // The value of the joystick goes from -1 to 1;
             float stickValue;
 
-            if (GameplayManager.Instance.useKeyBoard == false)
+            if (gameManager.useKeyBoard == false)
             {
                 if (config.stickID != stickIndicators[5].stickID)
                     stickValue = Input.GetAxis(config.stickID);
@@ -109,11 +112,11 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
             }
             else
             {
-                GameplayManager.JoySitckConfig stick = GameplayManager.Instance.sticks.Find(stick => stick.stickName == config.stickID);
+                GameplayManager.JoySitckConfig stick = gameManager.sticks.Find(stick => stick.stickName == config.stickID);
                 stickValue = (int)stick.stickState / 2.0f;
             }
 
-            var stickLevel = GameplayManager.Instance.stickLevels[config.levelIndex];
+            var stickLevel = gameManager.stickLevels[config.levelIndex];
             Slider slider = config.stickIndicator.GetChild(0).GetComponent<Slider>();
 
             /* Update slider position */
@@ -147,7 +150,7 @@ public class JoystickStatePanel : DestroyableSingleton<JoystickStatePanel>
     private void OnClickStartButton()
     {
         Hide();
-        GameplayManager.Instance.StartGame();
+        gameManager.StartGame();
     }
 
 

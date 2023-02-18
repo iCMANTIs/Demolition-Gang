@@ -65,6 +65,9 @@ public class Excavator : DestroyableSingleton<Excavator>
         base.Start();
 
         hardwareManager.OnStick2ChangeAction += IgniteListener;
+        gameManager = GameplayManager.Instance;
+        hardwareManager = HardwareManager.Instance;
+        soundManager = SoundEffectManager.Instance;
 
         InitExcavator();        
     }
