@@ -34,7 +34,9 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     public float socreAward = 2000f;
 
     [Header("Debug")]
-    public bool useKeyBoard;
+    public bool isDebugMode = false;
+    public bool useKeyBoard = false;
+
 
     public enum StickState { ACCELERATE = 2, FORWARD = 1, IDLE = 0, BACKWARD = -1, DECELERATE = -2 }
     public enum GameState { UNSTARTED, PAUSED, STARTED }
