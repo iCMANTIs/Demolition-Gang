@@ -313,7 +313,7 @@ public class Excavator : DestroyableSingleton<Excavator>
                     break;
             }
 
-            if (currentState != gearState && !Input.GetKey(KeyCode.Joystick1Button2) && gameManager.isDebugMode == false)
+            if (currentState != gearState && gameManager.useCluthBtn == true && !Input.GetKey(KeyCode.Joystick1Button2))
             {
                 engineState = EngineState.OFF;
                 gearState = GearState.NEUTRAL;

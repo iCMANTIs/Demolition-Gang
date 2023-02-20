@@ -36,6 +36,7 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     [Header("Debug")]
     public bool isDebugMode = false;
     public bool useKeyBoard = false;
+    public bool useCluthBtn = false;
 
 
     public enum StickState { ACCELERATE = 2, FORWARD = 1, IDLE = 0, BACKWARD = -1, DECELERATE = -2 }
