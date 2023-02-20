@@ -63,6 +63,11 @@ public class Excavator : DestroyableSingleton<Excavator>
     private GearState gearState = GearState.NEUTRAL;
     public GearState ExcavatorGearState { get { return gearState; } }
 
+    public enum DamageState { FIXED = 1, BROKEN = 0 }
+    private DamageState boomState = DamageState.FIXED;
+    private DamageState armState = DamageState.FIXED;
+
+
 
 
 
@@ -95,6 +100,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             UpdateCabRotation();
             UpdateBoomRotation();
             UpdateArmRotation();
+            UpdateDamageState();
 
             BucketListener();
             HornListener();
@@ -252,7 +258,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     private void UpdateBoomRotation()
     {
         float angularSpeed = 0.0f;
-        if (engineState == EngineState.ON)
+        if (engineState == EngineState.ON && boomState == DamageState.FIXED)
         {
             GameplayManager.JoySitckConfig stick = gameManager.sticks[2];
             angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
@@ -281,6 +287,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             {
                 Debug.LogWarning("Boom is borken!!");
                 isBoomReachLimit = false;
+                boomState = DamageState.BROKEN;
             }
         }
         else
@@ -292,7 +299,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     private void UpdateArmRotation()
     {
         float angularSpeed = 0.0f;
-        if (engineState == EngineState.ON)
+        if (engineState == EngineState.ON && armState == DamageState.FIXED)
         {
             GameplayManager.JoySitckConfig stick = gameManager.sticks[4];
             angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
@@ -323,6 +330,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             {
                 Debug.LogWarning("Arm is borken!!");
                 isArmReachLimit = false;
+                armState = DamageState.BROKEN;
             }
         }
         else
@@ -380,6 +388,18 @@ public class Excavator : DestroyableSingleton<Excavator>
         }
     }
 
+
+    private void UpdateDamageState()
+    {
+        if (gameManager.useQuickFix)
+        {
+            if (boomState == DamageState.BROKEN && Input.GetKeyUp(KeyCode.A))
+                boomState = DamageState.FIXED;
+
+            if (armState == DamageState.BROKEN && Input.GetKeyUp(KeyCode.S))
+                armState = DamageState.FIXED;
+        }
+    }
 
     public void UpdateEngineRMP()
     {

@@ -20,9 +20,12 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     }
 
     [Header("Joystick")]
-    /* Left first stick control the left track; Left second stick, control the cab rotation;
-     * Left third stick, control the boom rotation; Right first stick, control the right track;
-     * Right second stick, control the arm rotation; Right third stick, control the gear shifting */
+    /* Left stick 1 (Q-W): control the left track; 
+     * Left stick 2 (E-R): control the cab rotation;
+     * Left stick 3 (T-Y): control the boom rotation; 
+     * Right stick 1 (U-I): control the right track;
+     * Right stick 2 (O-P): control the arm rotation; 
+     * Right stick 3 ([-]): control the gear shifting */
     public List<JoySitckConfig> sticks = new List<JoySitckConfig>();
     public List<JoystickLevelConfig> stickLevels = new List<JoystickLevelConfig>();
 
@@ -34,9 +37,16 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     public float socreAward = 2000f;
 
     [Header("Debug")]
+    /* Left btn 1 (A): Boom quick fix; 
+     * Left btn 2 (S): Arm quick fix;
+     * Right btn 2 (X): bucket; 
+     * Right btn 3 (C): change camera
+     * Right btn 4 (V): horn 
+     * Right btn 5 (B): horn */
     public bool manualIgnite = false;
     public bool useKeyBoard = false;
     public bool useCluthBtn = false;
+    public bool useQuickFix = false;
 
 
     public enum StickState { ACCELERATE = 2, FORWARD = 1, IDLE = 0, BACKWARD = -1, DECELERATE = -2 }
@@ -176,23 +186,23 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
             sticks[2] = config;
 
             config = sticks[3];
-            if (Input.GetKeyUp(KeyCode.A) && config.stickState != StickState.ACCELERATE)
+            if (Input.GetKeyUp(KeyCode.U) && config.stickState != StickState.ACCELERATE)
                 config.stickState = config.stickState + 1;
-            else if (Input.GetKeyUp(KeyCode.S) && config.stickState != StickState.DECELERATE)
+            else if (Input.GetKeyUp(KeyCode.I) && config.stickState != StickState.DECELERATE)
                 config.stickState = config.stickState - 1;
             sticks[3] = config;
 
             config = sticks[4];
-            if (Input.GetKeyUp(KeyCode.D) && config.stickState != StickState.ACCELERATE)
+            if (Input.GetKeyUp(KeyCode.O) && config.stickState != StickState.ACCELERATE)
                 config.stickState = config.stickState + 1;
-            else if (Input.GetKeyUp(KeyCode.F) && config.stickState != StickState.DECELERATE)
+            else if (Input.GetKeyUp(KeyCode.P) && config.stickState != StickState.DECELERATE)
                 config.stickState = config.stickState - 1;
             sticks[4] = config;
 
             config = sticks[5];
-            if (Input.GetKeyUp(KeyCode.G) && config.stickState != StickState.ACCELERATE)
+            if (Input.GetKeyUp(KeyCode.LeftBracket) && config.stickState != StickState.ACCELERATE)
                 config.stickState = config.stickState + 1;
-            else if (Input.GetKeyUp(KeyCode.H) && config.stickState != StickState.DECELERATE)
+            else if (Input.GetKeyUp(KeyCode.RightBracket) && config.stickState != StickState.DECELERATE)
                 config.stickState = config.stickState - 1;
             sticks[5] = config;
         }
