@@ -34,7 +34,7 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     public float socreAward = 2000f;
 
     [Header("Debug")]
-    public bool isDebugMode = false;
+    public bool manualIgnite = false;
     public bool useKeyBoard = false;
     public bool useCluthBtn = false;
 

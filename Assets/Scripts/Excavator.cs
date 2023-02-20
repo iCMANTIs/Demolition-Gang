@@ -14,8 +14,10 @@ public class Excavator : DestroyableSingleton<Excavator>
     public float angualrSpeedRate = 15f;
     public float boomUpperBound = 0.0f;
     public float boomLowerBound = 0.0f;
+    public float boomBreakTime = 3.0f;
     public float armUpperBound = 0.0f;
     public float armLowerBound = 0.0f;
+    public float armBreakTime = 3.0f;
     public float bucketAngularSpeed = 0.0f;
     public float bucketUpperBound = 0.0f;
     public float buckerLowerBound = 0.0f;
@@ -38,8 +40,12 @@ public class Excavator : DestroyableSingleton<Excavator>
     public Animator rightTrackAnimator;
     public Animator leftTrackAnimator;
 
-    private bool isBucketRotating = false;
     private int engineRPM = 0;
+    private bool isBucketRotating = false;
+    private bool isBoomReachLimit = false;
+    private bool isArmReachLimit = false;
+    private float boomLimitStartTime = 0.0f;
+    private float armLimitStartTime = 0.0f;
     private AudioSource engineIdleSource;
     private AudioSource engineAccelSource;
     private GameplayManager gameManager;
@@ -64,10 +70,10 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         base.Start();
 
-        hardwareManager.OnStick2ChangeAction += IgniteListener;
         gameManager = GameplayManager.Instance;
         hardwareManager = HardwareManager.Instance;
         soundManager = SoundEffectManager.Instance;
+        hardwareManager.OnStick2ChangeAction += IgniteListener;
 
         InitExcavator();        
     }
@@ -105,7 +111,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void InitExcavator()
     {
-        if (gameManager.isDebugMode)
+        if (gameManager.manualIgnite)
         {
             engineState = EngineState.ON;
         }
@@ -245,10 +251,11 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void UpdateBoomRotation()
     {
+        float angularSpeed = 0.0f;
         if (engineState == EngineState.ON)
         {
             GameplayManager.JoySitckConfig stick = gameManager.sticks[2];
-            float angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
+            angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
             Vector3 axis = boom.transform.forward;
             boom.transform.Rotate(axis, angularSpeed, Space.World);
         }
@@ -259,19 +266,36 @@ public class Excavator : DestroyableSingleton<Excavator>
             boom.transform.localRotation = Quaternion.Euler(eulerAngle.x, eulerAngle.y, boomUpperBound);
         if (eulerAngle.z < boomLowerBound && eulerAngle.z > 180)
             boom.transform.localRotation = Quaternion.Euler(eulerAngle.x, eulerAngle.y, boomLowerBound);
-        //if (eularAngle.z > boomUpperBound)
-        //    boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, boomUpperBound);
-        //if (eularAngle.z < boomLowerBound)
-        //    boom.transform.localRotation = Quaternion.Euler(eularAngle.x, eularAngle.y, boomLowerBound);
+
+        /* Detect if boom has reached limit position but player is still keep adding force
+         * If so, the boom will be broken after "boomBreakTime" seconds */
+        if ((angularSpeed > 0 && boom.transform.localEulerAngles.z >= boomUpperBound) ||
+            (angularSpeed < 0 && boom.transform.localEulerAngles.z <= boomLowerBound))
+        {
+            if (isBoomReachLimit == false)
+            {
+                isBoomReachLimit = true;
+                boomLimitStartTime = Time.fixedTime;
+            }
+            else if (Time.fixedTime - boomLimitStartTime >= boomBreakTime)
+            {
+                Debug.LogWarning("Boom is borken!!");
+                isBoomReachLimit = false;
+            }
+        }
+        else
+            isBoomReachLimit = false;
+
     }
 
 
     private void UpdateArmRotation()
     {
+        float angularSpeed = 0.0f;
         if (engineState == EngineState.ON)
         {
             GameplayManager.JoySitckConfig stick = gameManager.sticks[4];
-            float angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
+            angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
             Vector3 axis = arm.transform.forward;
             arm.transform.Rotate(axis, angularSpeed, Space.World);
         }
@@ -284,6 +308,25 @@ public class Excavator : DestroyableSingleton<Excavator>
             arm.transform.localRotation = Quaternion.Euler(eulerAngle.x, eulerAngle.y, armUpperBound);
         if (eulerAngle.z < armLowerBound && eulerAngle.z > 180)
             arm.transform.localRotation = Quaternion.Euler(eulerAngle.x, eulerAngle.y, armLowerBound);
+
+        /* Detect if arm has reached limit position but player is still keep adding force
+         * If so, the arm will be broken after "armBreakTime" seconds */
+        if ((angularSpeed > 0 && arm.transform.localEulerAngles.z >= armUpperBound) ||
+            (angularSpeed < 0 && arm.transform.localEulerAngles.z <= armLowerBound))
+        {
+            if (isArmReachLimit == false)
+            {
+                isArmReachLimit = true;
+                armLimitStartTime = Time.fixedTime;
+            }
+            else if (Time.fixedTime - armLimitStartTime >= armBreakTime)
+            {
+                Debug.LogWarning("Arm is borken!!");
+                isArmReachLimit = false;
+            }
+        }
+        else
+            isArmReachLimit = false;
     }
 
 
