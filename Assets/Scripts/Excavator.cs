@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SoundEffect;
+using System.Diagnostics;
 
 public class Excavator : DestroyableSingleton<Excavator>
 {
@@ -19,8 +20,10 @@ public class Excavator : DestroyableSingleton<Excavator>
     public float armLowerBound = 0.0f;
     public float armBreakTime = 3.0f;
     public float bucketAngularSpeed = 0.0f;
+    public float bucketAngularSpeedP = 0.0f;
     public float bucketUpperBound = 0.0f;
     public float buckerLowerBound = 0.0f;
+    //public bool closeBreak = false;
 
     [Header("Engine")]
     public float igniteInterval = 0.0f;
@@ -55,11 +58,11 @@ public class Excavator : DestroyableSingleton<Excavator>
     public Action<string> hornAction;
 
 
-    public enum EngineState { ON = 1, IGNITE = 0, OFF = -1}
+    public enum EngineState { ON = 1, IGNITE = 0, OFF = -1 }
     private EngineState engineState = EngineState.OFF;
     public EngineState ExcavatorEngineState { get { return engineState; } }
 
-    public enum GearState { THIRD = 3, SECOND = 2, FIRST = 1, NEUTRAL = 0, REVERSE = -1}
+    public enum GearState { THIRD = 3, SECOND = 2, FIRST = 1, NEUTRAL = 0, REVERSE = -1 }
     private GearState gearState = GearState.NEUTRAL;
     public GearState ExcavatorGearState { get { return gearState; } }
 
@@ -80,7 +83,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         soundManager = SoundEffectManager.Instance;
         hardwareManager.OnStick2ChangeAction += IgniteListener;
 
-        InitExcavator();        
+        InitExcavator();
     }
 
 
@@ -88,7 +91,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         base.Update();
 
-        
+
         if (gameManager.gameState == GameplayManager.GameState.STARTED)
         {
             UpdateGearState();
@@ -135,7 +138,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             /* First control plan: two joystick control two vehicle tracks respectively */
             if (leftStick.stickState == GameplayManager.StickState.DECELERATE)
                 leftSpeed = 0.0f;
-            else if (leftStick.stickState == GameplayManager.StickState.BACKWARD || 
+            else if (leftStick.stickState == GameplayManager.StickState.BACKWARD ||
                      leftStick.stickState == GameplayManager.StickState.IDLE)
                 leftSpeed = speedRate * 1;
             else
@@ -143,7 +146,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
             if (rightStick.stickState == GameplayManager.StickState.DECELERATE)
                 rightSpeed = 0.0f;
-            else if (rightStick.stickState == GameplayManager.StickState.BACKWARD || 
+            else if (rightStick.stickState == GameplayManager.StickState.BACKWARD ||
                      rightStick.stickState == GameplayManager.StickState.IDLE)
                 rightSpeed = speedRate * 1;
             else
@@ -176,7 +179,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
 
             /* Play sound effect */
-            if ((leftStick.stickState == GameplayManager.StickState.DECELERATE && 
+            if ((leftStick.stickState == GameplayManager.StickState.DECELERATE &&
                  rightStick.stickState == GameplayManager.StickState.DECELERATE) ||
                 gearState == GearState.NEUTRAL)
             {
@@ -191,7 +194,7 @@ public class Excavator : DestroyableSingleton<Excavator>
                 if (engineAccelSource == null)
                     engineAccelSource = soundManager.FindAvailableLoopAudioSource();
 
-                if (engineAccelSource != null && 
+                if (engineAccelSource != null &&
                     engineAccelSource.isPlaying == false)
                     soundManager.PlayInLoop(engineAccelSource, "Engine_Accelerating");
             }
@@ -249,7 +252,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         {
             GameplayManager.JoySitckConfig stick = gameManager.sticks[1];
             float angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
-            Vector3 axis = cab.transform.up; 
+            Vector3 axis = cab.transform.up;
             cab.transform.Rotate(axis, angularSpeed, Space.World);
         }
     }
@@ -285,9 +288,12 @@ public class Excavator : DestroyableSingleton<Excavator>
             }
             else if (Time.fixedTime - boomLimitStartTime >= boomBreakTime)
             {
-                Debug.LogWarning("Boom is borken!!");
-                isBoomReachLimit = false;
-                boomState = DamageState.BROKEN;
+                if (!gameManager.closeBreak)
+                {
+                    UnityEngine.Debug.LogWarning("Boom is borken!!");
+                    isBoomReachLimit = false;
+                    boomState = DamageState.BROKEN;
+                }
             }
         }
         else
@@ -328,9 +334,12 @@ public class Excavator : DestroyableSingleton<Excavator>
             }
             else if (Time.fixedTime - armLimitStartTime >= armBreakTime)
             {
-                Debug.LogWarning("Arm is borken!!");
-                isArmReachLimit = false;
-                armState = DamageState.BROKEN;
+                if (!gameManager.closeBreak)
+                {
+                    UnityEngine.Debug.LogWarning("Arm is borken!!");
+                    isArmReachLimit = false;
+                    armState = DamageState.BROKEN;
+                }
             }
         }
         else
@@ -435,27 +444,55 @@ public class Excavator : DestroyableSingleton<Excavator>
         }
     }
 
+    private bool speedUp = false;
 
     private void BucketListener()
     {
         //Debug.Log($"{bucket.transform.localEulerAngles}");
 
-        if ((Input.GetKeyDown(KeyCode.Joystick2Button2) || Input.GetKeyDown(KeyCode.X)) 
+        if ((Input.GetKeyDown(KeyCode.Joystick2Button2))
             && isBucketRotating == false)
         {
             StartCoroutine(BucketCoroutine());
+        }
+
+        if ((Input.GetKeyDown(KeyCode.X)))
+        {
+            if (isBucketRotating)
+            {
+                speedUp = curKey == KeyCode.X;
+                startBucket = curKey == KeyCode.X;
+            }
+            else
+            {
+                StartCoroutine(ForwardBucketCoroutine());
+            }
+            curKey = KeyCode.X;
+        }
+        if ((Input.GetKeyDown(KeyCode.Z)))
+        {
+            if (isBucketRotating)
+            {
+                speedUp = curKey == KeyCode.Z;
+                startBucket = curKey == KeyCode.Z;
+            }
+            else
+            {
+                StartCoroutine(BackwardBucketCoroutine());
+            }
+            curKey = KeyCode.Z;
         }
     }
 
 
     private void HornListener()
     {
-        if (Input.GetKeyUp(KeyCode.Joystick1Button0) ||  Input.GetKeyUp(KeyCode.V))
+        if (Input.GetKeyUp(KeyCode.Joystick1Button0) || Input.GetKeyUp(KeyCode.V))
         {
             soundManager.PlayOneShot(soundManager.singleAudioSourceList[0], "Horn_Farting");
             hornAction.Invoke("horn");
         }
-        else if (Input.GetKeyUp(KeyCode.Joystick1Button1) || Input.GetKeyUp(KeyCode.Joystick1Button3) || 
+        else if (Input.GetKeyUp(KeyCode.Joystick1Button1) || Input.GetKeyUp(KeyCode.Joystick1Button3) ||
                  Input.GetKeyUp(KeyCode.B))
         {
             soundManager.PlayOneShot(soundManager.singleAudioSourceList[0], "Horn_Truck");
@@ -473,7 +510,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         float time = 0f;
         float initialCount = hardwareManager.Joystick2;
-        
+
         AudioSource igniteSource = soundManager.FindAvailableLoopAudioSource();
         soundManager.PlayInLoop(igniteSource, "Engine_Igniting");
 
@@ -487,7 +524,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             if (Math.Abs(hardwareManager.Joystick2 - initialCount) >= igniteThreshold)
             {
                 engineState = EngineState.ON;
-                
+
                 /* Play sound effect */
                 AudioSource successSource = soundManager.FindAvailableSingleAudioSource();
                 soundManager.Stop(igniteSource);
@@ -497,7 +534,7 @@ public class Excavator : DestroyableSingleton<Excavator>
                 engineIdleSource = soundManager.FindAvailableLoopAudioSource();
                 soundManager.PlayInLoop(engineIdleSource, "Engine_Idling");
 
-                Debug.Log("Engine ON");
+                UnityEngine.Debug.Log("Engine ON");
                 yield break;
             }
 
@@ -507,6 +544,49 @@ public class Excavator : DestroyableSingleton<Excavator>
 
         soundManager.Stop(igniteSource);
         engineState = EngineState.OFF;
+        yield break;
+    }
+
+    private KeyCode curKey = 0;
+    private bool startBucket = true;
+
+    private IEnumerator ForwardBucketCoroutine()
+    {
+        startBucket = true;
+        isBucketRotating = true;
+        Vector3 eulerAngle = bucket.transform.localEulerAngles;
+        Vector3 axis = bucket.transform.forward;
+
+        /* Rotate forward */
+        while ((eulerAngle.z <= 360 && eulerAngle.z > 180) ||
+               (eulerAngle.z <= bucketUpperBound && eulerAngle.z < 180) && startBucket)
+        {
+            eulerAngle = bucket.transform.localEulerAngles;
+            bucket.transform.Rotate(axis, bucketAngularSpeed * Time.deltaTime * (speedUp ? bucketAngularSpeedP : 1), Space.World);
+            yield return null;
+        }
+
+        isBucketRotating = false;
+        yield break;
+    }
+
+    private IEnumerator BackwardBucketCoroutine()
+    {
+        startBucket = true;
+        isBucketRotating = true;
+        Vector3 eulerAngle = bucket.transform.localEulerAngles;
+        Vector3 axis = bucket.transform.forward;
+
+        /* Rotate backward */
+        while ((eulerAngle.z >= 0 && eulerAngle.z < 180) ||
+               (eulerAngle.z >= buckerLowerBound && eulerAngle.z > 180) && startBucket)
+        {
+            eulerAngle = bucket.transform.localEulerAngles;
+            bucket.transform.Rotate(axis, -1 * bucketAngularSpeed * Time.deltaTime, Space.World);
+            yield return null;
+        }
+        speedUp = false;
+        isBucketRotating = false;
         yield break;
     }
 
@@ -541,7 +621,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
 
 
-   
+
 
 
     // Show some data 

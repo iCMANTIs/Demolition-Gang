@@ -47,7 +47,7 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     public bool useKeyBoard = false;
     public bool useCluthBtn = false;
     public bool useQuickFix = false;
-
+    public bool closeBreak = false;
 
     public enum StickState { ACCELERATE = 2, FORWARD = 1, IDLE = 0, BACKWARD = -1, DECELERATE = -2 }
     public enum GameState { UNSTARTED, PAUSED, STARTED }
