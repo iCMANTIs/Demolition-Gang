@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SoundEffect;
 using System.Diagnostics;
+using TMPro;
 
 public class Excavator : DestroyableSingleton<Excavator>
 {
@@ -23,6 +24,7 @@ public class Excavator : DestroyableSingleton<Excavator>
     public float bucketAngularSpeedP = 0.0f;
     public float bucketUpperBound = 0.0f;
     public float buckerLowerBound = 0.0f;
+    public float quickFixTime = 3.0f;
     //public bool closeBreak = false;
 
     [Header("Engine")]
@@ -44,17 +46,25 @@ public class Excavator : DestroyableSingleton<Excavator>
     public Animator leftTrackAnimator;
 
     private int engineRPM = 0;
+    private bool speedUp = false;
+    private bool startBucket = true;
     private bool isBucketRotating = false;
     private bool isBoomReachLimit = false;
     private bool isArmReachLimit = false;
+    private bool isQuickFixStart = false;
     private float boomLimitStartTime = 0.0f;
     private float armLimitStartTime = 0.0f;
+    private float quickFixStartTime = 0.0f;
+    private KeyCode curKey = 0;
     private AudioSource engineIdleSource;
     private AudioSource engineAccelSource;
     private GameplayManager gameManager;
     private HardwareManager hardwareManager;
     private SoundEffectManager soundManager;
+    private GameplayPanel gameplayPanel;
+
     public int EngineRPM => engineRPM;
+    public Vector3 respawnPoint;
     public Action<string> hornAction;
 
 
@@ -78,9 +88,11 @@ public class Excavator : DestroyableSingleton<Excavator>
     {
         base.Start();
 
+        respawnPoint = transform.position;
         gameManager = GameplayManager.Instance;
         hardwareManager = HardwareManager.Instance;
         soundManager = SoundEffectManager.Instance;
+        gameplayPanel = GameplayPanel.Instance;
         hardwareManager.OnStick2ChangeAction += IgniteListener;
 
         InitExcavator();
@@ -107,6 +119,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
             BucketListener();
             HornListener();
+            RespawnListener();
         }
 
 
@@ -120,7 +133,7 @@ public class Excavator : DestroyableSingleton<Excavator>
 
     private void InitExcavator()
     {
-        if (gameManager.manualIgnite)
+        if (!gameManager.manualIgnite)
         {
             engineState = EngineState.ON;
         }
@@ -133,7 +146,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         {
             float leftSpeed, rightSpeed, speed;
             GameplayManager.JoySitckConfig leftStick = gameManager.sticks[0];
-            GameplayManager.JoySitckConfig rightStick = gameManager.sticks[3];
+            GameplayManager.JoySitckConfig rightStick = gameManager.sticks[5];
 
             /* First control plan: two joystick control two vehicle tracks respectively */
             if (leftStick.stickState == GameplayManager.StickState.DECELERATE)
@@ -213,7 +226,7 @@ public class Excavator : DestroyableSingleton<Excavator>
             float angularSpeed;
             Vector3 axis = transform.up;
             GameplayManager.JoySitckConfig leftStick = gameManager.sticks[0];
-            GameplayManager.JoySitckConfig rightStick = gameManager.sticks[3];
+            GameplayManager.JoySitckConfig rightStick = gameManager.sticks[5];
 
             /* First control plan: two joystick control two vehicle tracks respectively */
             angularSpeed = ((int)leftStick.stickState - (int)rightStick.stickState) * (int)gearState * angualrSpeedRate * Time.deltaTime;
@@ -293,6 +306,10 @@ public class Excavator : DestroyableSingleton<Excavator>
                     UnityEngine.Debug.LogWarning("Boom is borken!!");
                     isBoomReachLimit = false;
                     boomState = DamageState.BROKEN;
+
+                    string borkenPart = armState == DamageState.BROKEN ? "Boom and Arm" : "Boom";
+                    gameplayPanel.UpdateBroken(borkenPart);
+                    gameplayPanel.UpdateBrokenVisibility(true);
                 }
             }
         }
@@ -307,7 +324,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         float angularSpeed = 0.0f;
         if (engineState == EngineState.ON && armState == DamageState.FIXED)
         {
-            GameplayManager.JoySitckConfig stick = gameManager.sticks[4];
+            GameplayManager.JoySitckConfig stick = gameManager.sticks[3];
             angularSpeed = (int)stick.stickState * angualrSpeedRate * Time.deltaTime;
             Vector3 axis = arm.transform.forward;
             arm.transform.Rotate(axis, angularSpeed, Space.World);
@@ -339,6 +356,10 @@ public class Excavator : DestroyableSingleton<Excavator>
                     UnityEngine.Debug.LogWarning("Arm is borken!!");
                     isArmReachLimit = false;
                     armState = DamageState.BROKEN;
+
+                    string borkenPart = boomState == DamageState.BROKEN ? "Boom and Arm" : "Arm";
+                    gameplayPanel.UpdateBroken(borkenPart);
+                    gameplayPanel.UpdateBrokenVisibility(true);
                 }
             }
         }
@@ -352,7 +373,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         if (engineState == EngineState.ON)
         {
             GearState currentState;
-            GameplayManager.JoySitckConfig stick = gameManager.sticks[5];
+            GameplayManager.JoySitckConfig stick = gameManager.sticks[4];
             switch (stick.stickState)
             {
                 case GameplayManager.StickState.ACCELERATE:
@@ -403,10 +424,50 @@ public class Excavator : DestroyableSingleton<Excavator>
         if (gameManager.useQuickFix)
         {
             if (boomState == DamageState.BROKEN && Input.GetKeyUp(KeyCode.A))
+            {
                 boomState = DamageState.FIXED;
 
+                string borkenPart = armState == DamageState.BROKEN ? "Arm" : "";
+                gameplayPanel.UpdateBroken(borkenPart);
+            }
+
             if (armState == DamageState.BROKEN && Input.GetKeyUp(KeyCode.S))
+            {
                 armState = DamageState.FIXED;
+
+                string borkenPart = boomState == DamageState.BROKEN ? "Boom" : "";
+                gameplayPanel.UpdateBroken(borkenPart);
+            }
+
+            if (boomState == DamageState.FIXED && armState == DamageState.FIXED)
+                gameplayPanel.UpdateBrokenVisibility(false);
+        }
+        else
+        {
+            if (isQuickFixStart == false && 
+                hardwareManager.IsWireConnected == true &&
+               (boomState == DamageState.BROKEN || armState == DamageState.BROKEN))
+            {
+                isQuickFixStart = true;
+                quickFixStartTime = Time.fixedTime;
+            }
+
+            if (hardwareManager.IsWireConnected == true && isQuickFixStart == true)
+            {
+                if (Time.fixedTime - quickFixStartTime >= quickFixTime)
+                {
+                    boomState = DamageState.FIXED;
+                    armState = DamageState.FIXED;
+                    isQuickFixStart = false;
+                    gameplayPanel.UpdateBrokenVisibility(false);
+                    UnityEngine.Debug.LogWarning("Quck fix finish!");
+                }
+            }
+            else if (hardwareManager.IsWireConnected == false && isQuickFixStart == true)
+            {
+                isQuickFixStart = false;
+                UnityEngine.Debug.LogWarning("Quck fix unfinish!");
+            }
         }
     }
 
@@ -444,7 +505,6 @@ public class Excavator : DestroyableSingleton<Excavator>
         }
     }
 
-    private bool speedUp = false;
 
     private void BucketListener()
     {
@@ -506,6 +566,18 @@ public class Excavator : DestroyableSingleton<Excavator>
     }
 
 
+    private void RespawnListener()
+    {
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            transform.position = respawnPoint;
+            transform.rotation = Quaternion.identity;
+        }
+    }
+
+
+
+
     private IEnumerator IgniteCoroutine()
     {
         float time = 0f;
@@ -547,8 +619,6 @@ public class Excavator : DestroyableSingleton<Excavator>
         yield break;
     }
 
-    private KeyCode curKey = 0;
-    private bool startBucket = true;
 
     private IEnumerator ForwardBucketCoroutine()
     {
@@ -569,6 +639,7 @@ public class Excavator : DestroyableSingleton<Excavator>
         isBucketRotating = false;
         yield break;
     }
+
 
     private IEnumerator BackwardBucketCoroutine()
     {
@@ -636,6 +707,18 @@ public class Excavator : DestroyableSingleton<Excavator>
         //GUI.TextArea(new Rect(0, 240, 250, 40), $"JoyStick Button : {Input.GetKey(KeyCode.Joystick1Button2)}");
     }
 
-
-
+    //private void ShowBreakTip()
+    //{
+    //    TxtBoomOrArmBrkTip.gameObject.SetActive(boomState == DamageState.BROKEN || armState == DamageState.BROKEN);
+    //    if (boomState == DamageState.BROKEN && armState == DamageState.BROKEN)
+    //    {
+    //        TxtBoomOrArmBrkTip.text = "Boom and Arm overload! Need to repair!";
+    //    } else if(boomState == DamageState.BROKEN)
+    //    {
+    //        TxtBoomOrArmBrkTip.text = "Boom overload! Need to repair!";
+    //    } else if(armState == DamageState.BROKEN)
+    //    {
+    //        TxtBoomOrArmBrkTip.text = "Arm overload! Need to repair!";
+    //    }
+    //}
 }

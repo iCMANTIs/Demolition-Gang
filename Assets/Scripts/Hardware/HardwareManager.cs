@@ -10,6 +10,10 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
     private bool buttonPressedThisFrame;
     private bool buttonReleasedThisFrame;
 
+    private bool isWireConnected;
+    private bool wireConnectedThisFrame;
+    private bool wireDisconnectedThisFrame;
+
     public Action<string> action;
     public Action<string> actionIgnite;
     public Action OnStick2ChangeAction;
@@ -20,6 +24,7 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
 
     public float Joystick1 { get { return joystick1; } }
     public float Joystick2 { get { return joystick2; } }
+    public bool IsWireConnected { get { return isWireConnected; } }
 
 
 
@@ -30,7 +35,6 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
 
         action += Test;
         actionIgnite += Test;
-
     }
 
     protected override void Start()
@@ -41,6 +45,10 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
         isButtonPressed = false;
         buttonPressedThisFrame = false;
         buttonReleasedThisFrame = false;
+
+        isWireConnected = false;
+        wireConnectedThisFrame = false;
+        wireDisconnectedThisFrame = false;
 
         UduinoManager.Instance.OnDataReceived += OnDataReceived;
     }
@@ -60,6 +68,9 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
 
         buttonPressedThisFrame = false;
         buttonReleasedThisFrame = false;
+
+        wireConnectedThisFrame = false;
+        wireDisconnectedThisFrame = false;
 
         if (Input.GetKeyDown("space"))
         {
@@ -84,6 +95,19 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
         {
             buttonReleasedThisFrame = true;
             isButtonPressed = false;
+        }
+        else if (data.Length == 2 && data.Substring(0, 1) == "C")
+        {
+            if (data.Substring(1) == "T")
+            {
+                wireConnectedThisFrame = true;
+                isWireConnected = true;
+            }
+            else if (data.Substring(1) == "F")
+            {
+                wireDisconnectedThisFrame = true;
+                isWireConnected = false;
+            }
         }
         else if (data.Length > 2 && data.Substring(0, 2) == "IG")
         {
@@ -137,6 +161,27 @@ public class HardwareManager : DontDestroySingleton<HardwareManager>
     public bool GetKey(string key)
     {
         return isButtonPressed;
+    }
+
+    //New block of code added
+    //Return true during the frame that the wire is connected.
+    public bool GetWireConnected()
+    {
+        return wireConnectedThisFrame;
+    }
+
+    //New block of code added
+    //Return true during the frame that the wire is disconnected.
+    public bool GetWireDisconnected()
+    {
+        return wireDisconnectedThisFrame;
+    }
+
+    //New block of code added
+    //Return true while wire is connected.
+    public bool GetWireStatus()
+    {
+        return isWireConnected;
     }
 
     public void LightUp(int lightUpTime)

@@ -23,9 +23,9 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
     /* Left stick 1 (Q-W): control the left track; 
      * Left stick 2 (E-R): control the cab rotation;
      * Left stick 3 (T-Y): control the boom rotation; 
-     * Right stick 1 (U-I): control the right track;
-     * Right stick 2 (O-P): control the arm rotation; 
-     * Right stick 3 ([-]): control the gear shifting */
+     * Right stick 1 (U-I): control the arm rotation;
+     * Right stick 2 (O-P): control the gear shifting; 
+     * Right stick 3 ([-]): control the right track */
     public List<JoySitckConfig> sticks = new List<JoySitckConfig>();
     public List<JoystickLevelConfig> stickLevels = new List<JoystickLevelConfig>();
 
@@ -85,6 +85,18 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
         if (Input.GetKey(KeyCode.Escape))
             ExitGame();
 
+
+
+
+
+        //if (Input.GetKey(KeyCode.M))
+        //    Debug.LogWarning("Get key is true!");
+        //if (Input.GetKeyDown(KeyCode.M))
+        //    Debug.LogWarning("Get key down is true!");
+        //if (Input.GetKeyUp(KeyCode.M))
+        //    Debug.LogWarning("Get key up is true!");
+
+
     }
 
 
@@ -142,12 +154,12 @@ public class GameplayManager : DestroyableSingleton<GameplayManager>
                 float stickValue;
 
                 /* Right joystick 3 use the input from external hardware */
-                if (config.stickName == "RightJoyStickS3")
-                    stickValue = HardwareManager.Instance.Joystick1;
-                else
-                    stickValue = Input.GetAxis(config.stickName);
+                //if (config.stickName == "RightJoyStickS3")
+                //    stickValue = HardwareManager.Instance.Joystick1;
+                //else
+                //    stickValue = Input.GetAxis(config.stickName);
+                stickValue = Input.GetAxis(config.stickName);
 
-                //Debug.Log($"Stick {stickName} value {value}");
                 if (stickValue <= 1 && stickValue > 0.6)
                     config.stickState = StickState.ACCELERATE;
                 else if (stickValue <= 0.6 && stickValue > 0.2)

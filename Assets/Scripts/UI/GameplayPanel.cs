@@ -15,12 +15,15 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI bonusText;
     public TextMeshProUGUI alertText;
+    public TextMeshProUGUI brokenText;
     public TextMeshProUGUI alertStateText;
     public TextMeshProUGUI trackTimerText;
     public TextMeshProUGUI RPMText;
     public TextMeshProUGUI GearText;
 
     public RectTransform alertIndicator;
+
+    public GameObject broken;
 
 
     protected override void Start()
@@ -73,13 +76,21 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
             timerText.color = Color.white;
     }
 
-
     private void UpdateGameSocre()
     {
         scoreText.text = $"{GameplayManager.Instance.ActionScore}";
         bonusText.text = $"{GameplayManager.Instance.TimeScore}";
     }
 
+    public void UpdateBroken(string borkenPart)
+    {
+        brokenText.text = $"!! {borkenPart} is borken !! Needs Repair !!";
+    }
+
+    public void UpdateBrokenVisibility(bool visibility)
+    {
+        broken.SetActive(visibility);
+    }
 
     private void UpdateVictimAlert()
     {
@@ -112,7 +123,6 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
         target.sizeDelta = sizeDelta;
     }
 
-
     private void UpdateAlertIndicator()
     {
         float alertScale = AlertManager.Instance.alertUpperBound;
@@ -123,6 +133,7 @@ public class GameplayPanel : DestroyableSingleton<GameplayPanel>
         float ratio = alertValue / alertScale;
         slider.value = ratio;
     }
+
 
     private void UpdateRPM()
     {
